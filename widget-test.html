@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Website - Widget Test</title>
+    <!-- We need to link the CSS for the widget as well since Vite usually separates it in library mode unless inlined -->
+    <link rel="stylesheet" href="./public/widget/reachgrc-trust.css">
+    
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            padding: 40px;
+        }
+        .customer-header {
+            background: #fff;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="customer-header">
+        <h1>Acme Corp Official Website</h1>
+        <p>We take security seriously. Check our Trust Score below.</p>
+    </div>
+
+    <!-- The Widget Container -->
+    <div data-reach-trust-widget data-company-id="1"></div>
+
+    <br><br>
+
+    <h3>Another Widget Instance (Globex)</h3>
+    <div data-reach-trust-widget data-company-id="2"></div>
+
+    <!-- The Widget Script -->
+    <script src="./public/widget/widget.umd.js"></script>
+
+</body>
+</html>
