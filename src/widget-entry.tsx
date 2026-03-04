@@ -1,47 +1,58 @@
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { TrustBadge } from './components/TrustBadge';
-import { fetchCompanyData } from './services/api';
-import './index.css'; // Import styles to inject them
+import { TrustCenterContainer } from './components/TrustCenterContainer';
+import { fetchCompanyData } from './services/api'; 
+import type { Company } from './types';
+import './index.css';
 
-const initWidgets = () => {
-  const widgetElements = document.querySelectorAll('[data-reach-trust-widget]');
+const Widget = ({ companyId }: { companyId: string }) => {
+  const [company, setCompany] = useState<Company | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  widgetElements.forEach(async (el) => {
-    const companyId = el.getAttribute('data-company-id');
-    if (!companyId) return;
+  useEffect(() => {
+    fetchCompanyData(companyId).then((data) => {
+      setCompany(data);
+      setLoading(false);
+    });
+  }, [companyId]);
 
-    // Fetch data
-    const company = await fetchCompanyData(companyId);
-    if (!company) {
-      console.error(`ReachGRC Widget: Company ${companyId} not found.`);
-      return;
-    }
-
-    // Create a shadow root to isolate styles
-    // Note: For Tailwind to work in Shadow DOM, we need to inject the styles manually or use a specific strategy.
-    // For simplicity in this demo, we'll mount directly but standard practice often uses Shadow DOM.
-    // However, Tailwind preflight might conflict. Let's try direct mount first for simplicity, 
-    // or we'd need to fetch the CSS file and inject it into the shadow root.
-    
-    // Changing approach: Mount inside a div, but we need to ensure styles are available.
-    // We will build a single JS file that includes CSS injection if possible, 
-    // or we distribute a JS + CSS file.
-    // For a "single script" experience, we'll stick to direct mounting for now, 
-    // acknowledging that global styles *might* bleed if not careful, but Tailwind classes are specific enough.
-    
-    const root = createRoot(el);
-    root.render(
-      <div className="reach-trust-widget-container">
-        <TrustBadge 
-          company={company} 
-          onClick={() => {
-            const baseUrl = import.meta.env.VITE_APP_URL || 'http://localhost:5173';
-            window.open(`${baseUrl}/company/${companyId}`, '_blank');
-          }}
-        />
+  if (loading) return (
+    <div className="bg-slate-900 p-6 rounded-2xl border border-white/10 shadow-lg max-w-6xl mx-auto font-sans animate-pulse">
+      <div className="space-y-6">
+        <div className="h-24 bg-slate-800 rounded-xl"></div>
+        <div className="grid md:grid-cols-12 gap-6">
+          <div className="md:col-span-4 lg:col-span-3 h-48 bg-slate-800 rounded-xl"></div>
+          <div className="md:col-span-8 lg:col-span-9 h-64 bg-slate-800 rounded-xl"></div>
+        </div>
       </div>
-    );
-  });
+    </div>
+  );
+  if (!company) return <div className="p-4 text-center text-sm text-red-400 font-sans bg-slate-900 rounded-2xl border border-red-900/50">Security Profile Not Found</div>;
+
+  return <TrustCenterContainer company={company} />;
+};
+
+
+// Find all elements with the widget attribute
+const initWidgets = () => {
+    const widgetElements = document.querySelectorAll('[data-reach-trust-widget]');
+    
+    widgetElements.forEach((el) => {
+      const companyId = el.getAttribute('data-company-id');
+      
+      if (companyId) {
+        // Prevent double initialization
+        if (el.getAttribute('data-widget-initialized') === 'true') return;
+        el.setAttribute('data-widget-initialized', 'true');
+
+        const root = createRoot(el);
+        root.render(
+          <React.StrictMode>
+            <Widget companyId={companyId} />
+          </React.StrictMode>
+        );
+      }
+    });
 };
 
 // Auto-init when DOM is ready
