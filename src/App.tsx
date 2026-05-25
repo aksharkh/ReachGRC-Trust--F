@@ -12,6 +12,7 @@ function App() {
         {/* Redirect root to a demo company for easier testing */}
         <Route path="/" element={<Navigate to="/company/1" replace />} />
         <Route path="/developers/guide" element={<DeveloperGuide />} />
+        <Route path="/developers/guide/:slug" element={<DeveloperGuide />} />
       </Routes>
     </Router>
   );
