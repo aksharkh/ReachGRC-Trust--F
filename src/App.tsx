@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProfile } from './pages/CompanyProfile';
-import { DeveloperGuide } from "./pages/DeveloperGuide";
-
+import { UIDeveloperGuide } from "./pages/UIDeveloperGuide";
+import DevelopersGuide from './pages/DevelopersGuide';
 function App() {
   return (
     <Router>
@@ -11,8 +11,8 @@ function App() {
         
         {/* Redirect root to a demo company for easier testing */}
         <Route path="/" element={<Navigate to="/company/1" replace />} />
-        <Route path="/developers/guide" element={<DeveloperGuide />} />
-        <Route path="/developers/guide/:slug" element={<DeveloperGuide />} />
+        <Route path="/developers/guide" element={<DevelopersGuide/>} />
+
       </Routes>
     </Router>
   );
