@@ -54,7 +54,7 @@ export interface Company extends ApiCompany {
   // Computed/Frontend-only properties
   logoUrl: string;
   stats: SecurityStats;
-  certifications?: string[]; // Optional now as API doesn't seem to return them yet
+  certifications?: string[]; 
   documents?: Document[];
   faqs?: FAQ[];
 }
@@ -63,3 +63,4 @@ export interface TrustBadgeProps {
   companyId: string;
   theme?: 'light' | 'dark';
 }
+// Optional now as API doesn't seem to return them yet
