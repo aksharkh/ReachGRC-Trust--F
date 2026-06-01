@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProfile } from './pages/CompanyProfile';
 
-import DevelopersGuide from './pages/DevelopersGuide';
 import { ThemeProvider } from "./ThemeContext";
 
 
@@ -17,6 +16,8 @@ import ContactUs from "./components/DocumentsComponent/GettingStartedComponents/
 
 import DeveloperGuide from './components/DocumentsComponent/developerGuide';
 import GetStarted from './components/DocumentsComponent/DeveloperGuideComponents/GettingStarted';
+import ApiKeys from './components/DocumentsComponent/DeveloperGuideComponents/ApiKey';
+import Companyprofile from './components/DocumentsComponent/DeveloperGuideComponents/CompanyProfile';
 
 const ComingSoon = ({ title }: { title: string }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
@@ -34,9 +35,7 @@ function App() {
           <Route path="/company/:id" element={<CompanyProfile />} />
           <Route path="/admin/company/:id" element={<CompanyProfile />} />
           <Route path="/" element={<Navigate to="/company/1" replace />} />
-          <Route path="/developers/guide" element={<DevelopersGuide />} />
 
-          {/* Docs routes */}
            <Route path="/docs" element={<DocsLayout />}>
  
             {/* Getting Started — sidebar + nested sub-routes */}
@@ -54,22 +53,22 @@ function App() {
 <Route path="developers-guide" element={<DeveloperGuide />}>
   <Route
     index
-    element={<Navigate to="getting-started" replace />}
+    element={<Navigate to="get-started" replace />}
   />
 
   <Route
-    path="getting-started"
+    path="get-started"
     element={<GetStarted />}
   />
 
   <Route
     path="api-keys"
-    element={<ComingSoon  title='comming soon'/>}
+    element={<ApiKeys/>}
   />
 
   <Route
-    path="company-management"
-    element={<ComingSoon  title='comming soon'/>}
+    path="company-profile"
+    element={<Companyprofile/>}
   />
 </Route>
             <Route path="non-developers-guide" element={<ComingSoon title="Non-Developers Guide" />} />
