@@ -35,3 +35,4 @@ const SecondaryBar = () => {
 };
 
 export default SecondaryBar;
+
