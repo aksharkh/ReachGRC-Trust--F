@@ -5,7 +5,7 @@ import { FaRocket, FaKey, FaBuilding, FaImage, FaFilePdf, FaHeartbeat } from "re
 export const developerGuideItems = [
   {
     label: "Getting Started",
-    path: "getting-started",
+    path: "get-started",
     icon: <FaRocket />
   },
   {
