@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProfile } from './pages/CompanyProfile';
-import { UIDeveloperGuide } from "./pages/UIDeveloperGuide";
+
 import DevelopersGuide from './pages/DevelopersGuide';
 import { ThemeProvider } from "./ThemeContext";
 
@@ -15,6 +15,8 @@ import ConceptsForAdmins from "./components/DocumentsComponent/GettingStartedCom
 import SampleData from "./components/DocumentsComponent/GettingStartedComponents/SampleData";
 import ContactUs from "./components/DocumentsComponent/GettingStartedComponents/ContactUs";
 
+import DeveloperGuide from './components/DocumentsComponent/developerGuide';
+import GetStarted from './components/DocumentsComponent/DeveloperGuideComponents/GettingStarted';
 
 const ComingSoon = ({ title }: { title: string }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
@@ -48,8 +50,28 @@ function App() {
               <Route path="contact-us"              element={<ContactUs />} />
             </Route>
  
-            {/* Other top-level sections — wire up when ready */}
-            <Route path="developers-guide"     element={<ComingSoon title="Developers Guide" />} />
+
+<Route path="developers-guide" element={<DeveloperGuide />}>
+  <Route
+    index
+    element={<Navigate to="getting-started" replace />}
+  />
+
+  <Route
+    path="getting-started"
+    element={<GetStarted />}
+  />
+
+  <Route
+    path="api-keys"
+    element={<ComingSoon  title='comming soon'/>}
+  />
+
+  <Route
+    path="company-management"
+    element={<ComingSoon  title='comming soon'/>}
+  />
+</Route>
             <Route path="non-developers-guide" element={<ComingSoon title="Non-Developers Guide" />} />
             <Route path="contact-us"           element={<ComingSoon title="Contact Us" />} />
             <Route path="tutorial"             element={<ComingSoon title="Tutorials" />} />
