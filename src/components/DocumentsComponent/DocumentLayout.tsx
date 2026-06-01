@@ -30,7 +30,7 @@ const DocsSectionLayout = ({
 
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/30 z-30"
+          className="md:hidden fixed inset-0 bg-black/10 z-30"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -51,7 +51,7 @@ const DocsSectionLayout = ({
           overflow-y-auto
         `}
       >
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 dark:text-zinc-500 px-2 mb-2">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-[#ff611a] px-2 mb-2">
           {title}
         </p>
 
@@ -61,11 +61,11 @@ const DocsSectionLayout = ({
             to={item.path}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150
+              `flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all duration-150 
               ${
                 isActive
-                  ? "bg-[#ff831c] text-white font-medium"
-                  : "text-zinc-600 dark:text-zinc-400 hover:bg-[#f9f1ea] dark:hover:bg-zinc-800 hover:text-[#ff611a] dark:hover:text-[#ff831c]"
+                  ? "bg-black text-white font-medium"
+                  : "text-zinc-600 hover:ml-1 dark:text-zinc-400 hover:bg-[#f9f1ea] dark:hover:bg-zinc-800 hover:text-[#ff611a] dark:hover:text-[#ff831c]"
               }`
             }
           >
