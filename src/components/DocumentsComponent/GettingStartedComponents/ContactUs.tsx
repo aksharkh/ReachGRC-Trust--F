@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Feedback } from "../DocShared";
-
+import type { CustomerQuery } from "../../../types/CustomerQuery";
+import CustomerQueryHandler from "../../../services/CustomerQueryHandler"
 interface ContactCardProps {
   icon: React.ReactNode;
   title: string;
@@ -25,7 +26,12 @@ const ContactCard: React.FC<ContactCardProps> = ({ icon, title, description, act
 
 const ContactUs = () => {
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState<CustomerQuery>({
+  customerName: "",
+  email: "",
+  subject: "",
+  description:"",
+});
 
   return (
     <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-10">
@@ -70,8 +76,8 @@ const ContactUs = () => {
                 <label className="block text-xs font-medium text-gray-600 dark:text-zinc-400 mb-1">Name</label>
                 <input
                   type="text"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  value={form.customerName}
+                  onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                   placeholder="Your name"
                   className="w-full border border-gray-200 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:placeholder-zinc-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#ff831c]"
                 />
@@ -101,14 +107,17 @@ const ContactUs = () => {
               <label className="block text-xs font-medium text-gray-600 dark:text-zinc-400 mb-1">Message</label>
               <textarea
                 rows={5}
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 placeholder="Describe your question or issue in detail..."
                 className="w-full border border-gray-200 dark:border-zinc-600 dark:bg-zinc-700 dark:text-zinc-200 dark:placeholder-zinc-500 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#ff831c] resize-none"
               />
             </div>
             <button
-              onClick={() => setSubmitted(true)}
+              onClick={() =>{
+                 setSubmitted(true)
+                 CustomerQueryHandler(form);
+                }}
               className="px-5 py-2 bg-[#ff831c] text-white text-sm font-medium rounded-lg hover:bg-[#e57318] transition-colors"
             >
               Send message
