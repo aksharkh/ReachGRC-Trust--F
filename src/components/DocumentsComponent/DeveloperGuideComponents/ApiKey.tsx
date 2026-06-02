@@ -72,7 +72,7 @@ const CodeBlock = ({ children }: { children: string }) => {
     <div className="relative bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg p-4 font-mono text-sm leading-relaxed text-zinc-800 dark:text-zinc-200 overflow-x-auto">
       <button
         onClick={handleCopy}
-        className="absolute top-3 right-3 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md px-2.5 py-1 transition-colors"
+        className="absolute top-3 cursor-pointer right-3 flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-md px-2.5 py-1 transition-colors"
       >
         {copied ? <FiCheck size={12} /> : <FiCopy size={12} />}
         {copied ? "Copied" : "Copy"}
