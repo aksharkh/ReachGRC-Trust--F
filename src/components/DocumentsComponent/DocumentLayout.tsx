@@ -69,7 +69,8 @@ const DocsSectionLayout = ({
               }`
             }
           >
-            {item.icon}
+            <p className="text-xl text-[#ff611a] font-bold">{item.icon}</p>
+            
             <span>{item.label}</span>
           </NavLink>
         ))}
