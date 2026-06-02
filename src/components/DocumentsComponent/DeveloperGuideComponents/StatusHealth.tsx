@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-  FiCopy, FiCheck, FiActivity, FiKey,
-  FiAlertTriangle, FiCheckCircle, FiXCircle, FiClock,
+  FiCopy, FiCheck, FiActivity,
+  FiCheckCircle, FiXCircle, FiClock,
 } from "react-icons/fi";
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
