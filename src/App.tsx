@@ -18,6 +18,9 @@ import DeveloperGuide from './components/DocumentsComponent/developerGuide';
 import GetStarted from './components/DocumentsComponent/DeveloperGuideComponents/GettingStarted';
 import ApiKeys from './components/DocumentsComponent/DeveloperGuideComponents/ApiKey';
 import Companyprofile from './components/DocumentsComponent/DeveloperGuideComponents/CompanyProfile';
+import LogoManagement from './components/DocumentsComponent/DeveloperGuideComponents/LogoManagement';
+import PdfManagement from './components/DocumentsComponent/DeveloperGuideComponents/PdfManagement';
+import StatusHealth from './components/DocumentsComponent/DeveloperGuideComponents/StatusHealth';
 
 const ComingSoon = ({ title }: { title: string }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
@@ -70,6 +73,23 @@ function App() {
     path="company-profile"
     element={<Companyprofile/>}
   />
+  <Route 
+    path="logo-management"
+    element={<LogoManagement/>}
+    />
+  <Route 
+    path="pdf-management"
+    element={<PdfManagement/>}
+    />
+  <Route 
+    path="pdf-management"
+    element={<PdfManagement/>}
+    />
+  <Route 
+    path="status"
+    element={<StatusHealth/>}
+    />
+
 </Route>
             <Route path="non-developers-guide" element={<ComingSoon title="Non-Developers Guide" />} />
             <Route path="contact-us"           element={<ComingSoon title="Contact Us" />} />
