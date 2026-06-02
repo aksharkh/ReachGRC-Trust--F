@@ -1,31 +1,102 @@
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { useTheme } from "../../ThemeContext";
+import { FiSearch } from "react-icons/fi";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+const docsPages = [
+  { title: "Getting Started", path: "/docs/getting-started/overview" },
+  { title: "API Keys", path: "/docs/developers-guide/api-keys" },
+  { title: "Company Profile", path: "/docs/developers-guide/company-profile" },
+  { title: "Logo Management", path: "/docs/developers-guide/logo-management" },
+  { title: "PDF Management", path: "/docs/developers-guide/pdf-management" },
+  { title: "Contact Us", path: "/docs/contact-us" },
+];
 
+console.log(docsPages);
 const NavBar = () => {
   const { theme, toggleTheme } = useTheme();
+const [query, setQuery] = useState("");
+const results = docsPages.filter((page) => {
+  const match = page.title
+    .toLowerCase()
+    .includes(query.toLowerCase());
 
+  console.log(page.title, match);
+
+  return match;
+});  console.log(results);
   return (
-    <div className="bg-white dark:bg-zinc-900 border-b border-[#dee3ea] dark:border-zinc-700 w-full h-full px-4 md:px-6 overflow-hidden transition-colors duration-200">
+    <div className="bg-white dark:bg-zinc-900 border-b border-[#dee3ea] dark:border-zinc-700 w-full h-full px-4 md:px-6 transition-colors duration-200">
       <div className="flex justify-between items-center h-full w-full">
 
         {/* Logo */}
         <div className="flex gap-2 md:gap-3 items-center h-full">
-          <p className="text-[#ff611a] font-bold text-lg md:text-xl">ReachGRC</p>
+          <Link
+          to={"/docs"}
+          className="text-[#ff611a] font-bold text-lg md:text-xl">ReachGRC</Link>
           <span className="hidden sm:block text-xs md:text-sm font-bold text-zinc-700 dark:text-zinc-300 tracking-widest">
             DOCUMENTATION
           </span>
         </div>
 
         <div className="flex items-center gap-2 md:gap-3 h-[80%]">
-          <input
-            placeholder="Search docs..."
-            className="hidden sm:block w-40 md:w-64 h-full bg-[#f7f7f7] dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder-zinc-500 border rounded-md border-[#dee3ea] dark:border-zinc-700 text-sm px-3 focus:outline-none focus:ring-1 focus:ring-[#ff831c] transition-colors"
-          />
+ <div className="hidden sm:block relative">
+  <FiSearch
+    className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400"
+    size={14}
+  />
+
+  <input
+    value={query}
+    onChange={(e) => setQuery(e.target.value)}
+    
+    placeholder="Search documentation..."
+    className="
+      w-56 md:w-80
+      h-8
+      pl-9 pr-4
+      bg-zinc-50
+      dark:bg-zinc-800
+      border
+      border-zinc-200
+      dark:border-zinc-700
+      rounded-xl
+      text-sm
+      dark:text-zinc-200
+      dark:placeholder-zinc-500
+      focus:outline-none
+      focus:border-[#ff831c]
+      focus:ring-2
+      focus:ring-[#ff831c]/20
+    "
+  />
+
+  {query.length > 0 && (
+    <div className="absolute top-12 left-0 w-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 dark:text-white rounded-xl shadow-lg overflow-hidden z-50">
+      {results.length > 0 ? (
+        results.map((page) => (
+          <Link
+            key={page.path}
+            to={page.path}
+            onClick={() => setQuery("")}
+            className="block px-4 py-3 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800"
+          >
+            {page.title}
+          </Link>
+        ))
+      ) : (
+        <div className="px-4 py-3 text-sm text-zinc-500">
+          No results found
+        </div>
+      )}
+    </div>
+  )}
+</div>
 
           <button
             onClick={toggleTheme}
             aria-label="Toggle dark mode"
-            className="h-full aspect-square flex items-center justify-center bg-zinc-800 dark:bg-zinc-200 text-white dark:text-zinc-900 rounded-full hover:opacity-80 transition-opacity"
+            className=" h-[80%] aspect-square flex items-center justify-center bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-zinc-700 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all cursor-pointer"
           >
             {theme === "dark" ? (
               <MdOutlineLightMode size={16} />
@@ -34,7 +105,6 @@ const NavBar = () => {
             )}
           </button>
         </div>
-
       </div>
     </div>
   );
