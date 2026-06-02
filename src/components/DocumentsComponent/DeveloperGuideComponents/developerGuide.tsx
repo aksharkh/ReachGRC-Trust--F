@@ -1,36 +1,40 @@
-// src/docs/developerGuideItems.tsx
 
-import { FaRocket, FaKey, FaBuilding, FaImage, FaFilePdf, FaHeartbeat } from "react-icons/fa";
+import { TbRocket } from "react-icons/tb";
+import { HiOutlineKey } from "react-icons/hi";
+import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
+import { TbPhoto } from "react-icons/tb";
+import { TbFileTypePdf } from "react-icons/tb";
+import { RiPulseLine } from "react-icons/ri";
 
 export const developerGuideItems = [
   {
     label: "Getting Started",
     path: "get-started",
-    icon: <FaRocket />
+    icon: <TbRocket />
   },
   {
     label: "API Keys",
     path: "api-keys",
-    icon: <FaKey />
+    icon: <HiOutlineKey />
   },
   {
     label: "Company Profile",
     path: "company-profile",
-    icon: <FaBuilding />
+    icon: <HiOutlineBuildingOffice2/>
   },
   {
     label: "Logo Management",
     path: "logo-management",
-    icon: <FaImage />
+    icon: <TbPhoto />
   },
   {
     label: "PDF Management",
     path: "pdf-management",
-    icon: <FaFilePdf />
+    icon: <TbFileTypePdf/>
   },
   {
     label: "Status & Health",
     path: "status",
-    icon: <FaHeartbeat />
+    icon: <RiPulseLine/>
   }
 ];

@@ -14,6 +14,10 @@ import {
   FiCheck,
 } from "react-icons/fi";
 
+import { Link } from "react-router-dom";
+import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
+import { RiCustomerService2Line } from "react-icons/ri";
+
 const CodeBlock = ({ children }: { children: string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -129,6 +133,35 @@ const OnPageNav = () => {
           </li>
         ))}
       </ul>
+      <div className="mt-8 pt-6 border-t border-zinc-200 dark:border-zinc-800">
+  <p className="text-xs font-medium text-zinc-700 dark:text-zinc-300 mb-3">
+    Was this page helpful?
+  </p>
+
+  <div className="flex gap-2 mb-4">
+    <button
+      className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-md border border-zinc-200 dark:border-zinc-700 dark:text-zinc-300 hover:border-[#ff831c] hover:text-[#ff831c] transition-all cursor-pointer"
+    >
+      <FiThumbsUp size={12} />
+      Yes
+    </button>
+
+    <button
+      className="flex items-center gap-1 px-3 py-1.5 text-xs rounded-md border border-zinc-200 dark:text-zinc-300 dark:border-zinc-700 hover:border-[#ff831c] hover:text-[#ff831c] transition-all cursor-pointer"
+    >
+      <FiThumbsDown size={12} />
+      No
+    </button>
+  </div>
+
+  <Link
+    to="/docs/contact-us"
+    className="flex items-center gap-2 text-sm text-[#ff831c] hover:underline"
+  >
+    <RiCustomerService2Line size={16} />
+    Still need help? Contact us
+  </Link>
+</div>
     </aside>
   );
 };
@@ -185,7 +218,7 @@ const GettingStarted = () => {
               step: "✓",
               label: "You're ready to make API calls",
               desc: "Include the key in every request using the x-api-key header as shown in the next section.",
-              active: false,
+              active: true,
             },
           ].map((item, i) => (
             <div key={i} className="relative mb-6 last:mb-0">
@@ -194,7 +227,11 @@ const GettingStarted = () => {
                   item.active
                     ? "bg-[#ff831c] text-white"
                     : "bg-zinc-300 dark:bg-zinc-600 text-zinc-600 dark:text-zinc-300"
-                }`}
+                }
+                ${
+                  item.step == "✓"? "bg-green-500 text-white":""
+                }
+                `}
               >
                 {item.step}
               </div>

@@ -2,6 +2,12 @@ import { useState } from "react";
 import { Feedback } from "../DocShared";
 import type { CustomerQuery } from "../../../types/CustomerQuery";
 import CustomerQueryHandler from "../../../services/CustomerQueryHandler"
+
+import { TbBooks, TbBugFilled } from "react-icons/tb";
+import { RiChatSmile3Fill, RiShieldCheckFill } from "react-icons/ri";
+import { PiCertificateFill } from "react-icons/pi";
+import { HiBuildingOffice2 } from "react-icons/hi2";
+
 interface ContactCardProps {
   icon: React.ReactNode;
   title: string;
@@ -47,12 +53,12 @@ const ContactUs = () => {
           How can we help?
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <ContactCard icon="📖" title="Documentation" description="Browse our full documentation for guides, API references, and tutorials." action="Browse docs" />
-          <ContactCard icon="💬" title="Community forum" description="Ask questions and share knowledge with other reachGRC users and practitioners." action="Join the conversation" />
-          <ContactCard icon="🎓" title="Training and certification" description="Take a course and get certified as a reachGRC administrator or compliance analyst." action="Start learning" />
-          <ContactCard icon="🐛" title="Report a bug" description="Found something that isn't working as expected? Let us know so we can fix it." action="Submit a bug report" />
-          <ContactCard icon="🏢" title="Enterprise sales" description="Talk to our sales team about enterprise plans, custom integrations, and volume pricing." action="Talk to sales" />
-          <ContactCard icon="🔐" title="Security disclosures" description="Found a security vulnerability? Please report it through our responsible disclosure program." action="Report a vulnerability" />
+          <ContactCard   icon={<TbBooks className="text-3xl text-sky-500" />} title="Documentation" description="Browse our full documentation for guides, API references, and tutorials." action="Browse docs" />
+          <ContactCard   icon={<RiChatSmile3Fill className="text-3xl text-violet-500" />} title="Community forum" description="Ask questions and share knowledge with other reachGRC users and practitioners." action="Join the conversation" />
+          <ContactCard  icon={<PiCertificateFill className="text-3xl text-amber-500" />} title="Training and certification" description="Take a course and get certified as a reachGRC administrator or compliance analyst." action="Start learning" />
+          <ContactCard  icon={<TbBugFilled className="text-3xl text-emerald-500" />} title="Report a bug" description="Found something that isn't working as expected? Let us know so we can fix it." action="Submit a bug report" />
+          <ContactCard  icon={<HiBuildingOffice2 className="text-3xl text-cyan-500" />} title="Enterprise sales" description="Talk to our sales team about enterprise plans, custom integrations, and volume pricing." action="Talk to sales" />
+          <ContactCard  icon={<RiShieldCheckFill className="text-3xl text-red-500" />} title="Security disclosures" description="Found a security vulnerability? Please report it through our responsible disclosure program." action="Report a vulnerability" />
         </div>
       </section>
 
