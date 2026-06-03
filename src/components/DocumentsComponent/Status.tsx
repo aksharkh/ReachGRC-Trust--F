@@ -71,9 +71,9 @@ const UptimeBars = ({ incidents }: { incidents: Incident[] }) => {
   const wrapRef = useRef<HTMLDivElement>(null);
 
 const barColor: Record<string, string> = {
-  green:  "bg-[#ff611a] dark:bg-[#ff831c]",      // normal — your brand orange
-  yellow: "bg-black dark:bg-white",      // minor incident — yellow, distinct from orange
-    red:    "bg-[#dee3ea] dark:bg-gray-300",      // serious outage — red, universally understood
+  green:  "bg-[#06B752]",      // normal — your brand orange
+  yellow: "bg-[#DDDE08]",      // minor incident — yellow, distinct from orange
+    red:    "bg-[#DE080A]",      // serious outage — red, universally understood
 };
 
   const handleEnter = (e: React.MouseEvent<HTMLDivElement>, bar: typeof bars[0]) => {
