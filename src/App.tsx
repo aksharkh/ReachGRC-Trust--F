@@ -22,6 +22,16 @@ import LogoManagement from './components/DocumentsComponent/DeveloperGuideCompon
 import PdfManagement from './components/DocumentsComponent/DeveloperGuideComponents/PdfManagement';
 import StatusHealth from './components/DocumentsComponent/DeveloperGuideComponents/StatusHealth';
 
+
+import NonDevelopersGuide from './components/DocumentsComponent/NonDeveloperGuide';
+import NonDeveloperOverview from './components/DocumentsComponent/NonDevelopersGuide/Overview';
+import TrustBadge from './components/DocumentsComponent/NonDevelopersGuide/TrustBadge';
+import HostedTrustCenter from './components/DocumentsComponent/NonDevelopersGuide/Hosted';
+import CustomBranding from './components/DocumentsComponent/NonDevelopersGuide/CustomBranding';
+import Sharing from './components/DocumentsComponent/NonDevelopersGuide/Sharing';
+import FAQ from './components/DocumentsComponent/NonDevelopersGuide/Faq';
+import StatusPage from './components/DocumentsComponent/Status';
+
 const ComingSoon = ({ title }: { title: string }) => (
   <div className="flex flex-col items-center justify-center h-full text-center px-8">
     <p className="text-4xl mb-4">🚧</p>
@@ -39,65 +49,83 @@ function App() {
           <Route path="/admin/company/:id" element={<CompanyProfile />} />
           <Route path="/" element={<Navigate to="/company/1" replace />} />
 
-           <Route path="/docs" element={<DocsLayout />}>
- 
+          <Route path="/docs" element={<DocsLayout />}>
             {/* Getting Started — sidebar + nested sub-routes */}
             <Route path="getting-started" element={<GettingStarted />}>
               <Route index element={<Navigate to="overview" replace />} />
-              <Route path="overview"                element={<Overview />} />
-              <Route path="get-started-for-users"  element={<GetStartedForUsers />} />
-              <Route path="tutorials"               element={<Tutorials />} />
-              <Route path="concepts-for-admins"     element={<ConceptsForAdmins />} />
-              <Route path="sample-data"             element={<SampleData />} />
-              <Route path="contact-us"              element={<ContactUs />} />
+              <Route path="overview" element={<Overview />} />
+              <Route
+                path="get-started-for-users"
+                element={<GetStartedForUsers />}
+              />
+              <Route path="tutorials" element={<Tutorials />} />
+              <Route
+                path="concepts-for-admins"
+                element={<ConceptsForAdmins />}
+              />
+              <Route path="sample-data" element={<SampleData />} />
+              <Route path="contact-us" element={<ContactUs />} />
             </Route>
- 
 
-<Route path="developers-guide" element={<DeveloperGuide />}>
-  <Route
-    index
-    element={<Navigate to="get-started" replace />}
-  />
+            <Route path="developers-guide" element={<DeveloperGuide />}>
+              <Route index element={<Navigate to="get-started" replace />} />
 
-  <Route
-    path="get-started"
-    element={<GetStarted />}
-  />
+              <Route path="get-started" element={<GetStarted />} />
 
-  <Route
-    path="api-keys"
-    element={<ApiKeys/>}
-  />
+              <Route path="api-keys" element={<ApiKeys />} />
 
-  <Route
-    path="company-profile"
-    element={<Companyprofile/>}
-  />
-  <Route 
-    path="logo-management"
-    element={<LogoManagement/>}
-    />
-  <Route 
-    path="pdf-management"
-    element={<PdfManagement/>}
-    />
-  <Route 
-    path="pdf-management"
-    element={<PdfManagement/>}
-    />
-  <Route 
-    path="status"
-    element={<StatusHealth/>}
-    />
+              <Route path="company-profile" element={<Companyprofile />} />
+              <Route path="logo-management" element={<LogoManagement />} />
+              <Route path="pdf-management" element={<PdfManagement />} />
+              <Route path="pdf-management" element={<PdfManagement />} />
+              <Route path="status" element={<StatusHealth />} />
+            </Route>
 
-</Route>
-            <Route path="non-developers-guide" element={<ComingSoon title="Non-Developers Guide" />} />
-            <Route path="contact-us"           element={<ComingSoon title="Contact Us" />} />
-            <Route path="tutorial"             element={<ComingSoon title="Tutorials" />} />
-            <Route path="status"               element={<ComingSoon title="Status" />} />
- 
+
+
+            <Route path="non-developers-guide" element={<NonDevelopersGuide />}>
+
+
+              <Route index element={<Navigate to="oview" replace />} />
+
+              <Route
+                path="oview"
+                // element={<ComingSoon title="Hello We WIll be back" />}
+                element={<NonDeveloperOverview />}
+              />
+              <Route
+                path="trust-badge"
+                element={<TrustBadge/>}
+              />
+              <Route
+                path="hosted-trust-center"
+                element={<HostedTrustCenter />}
+              />
+              <Route
+                path="custom-branding"
+                element={<CustomBranding/>}
+              />
+              <Route
+                path="sharing"
+                element={<Sharing />}
+              />
+              <Route
+                path="faq"
+                element={<FAQ/>}
+              />
+            </Route>
+            <Route
+              path="contact-us"
+              element={<ComingSoon title="Contact Us" />}
+            />
+            <Route path="tutorial" element={<ComingSoon title="Tutorials" />} />
+            <Route path="status" element={<StatusPage/>} />
+
             {/* Catch-all redirect */}
-            <Route index element={<Navigate to="getting-started/overview" replace />} />
+            <Route
+              index
+              element={<Navigate to="getting-started/overview" replace />}
+            />
           </Route>
         </Routes>
       </Router>
