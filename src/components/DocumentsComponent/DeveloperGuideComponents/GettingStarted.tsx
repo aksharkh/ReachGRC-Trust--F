@@ -113,7 +113,7 @@ const OnPageNav = () => {
   };
 
   return (
-    <aside className="hidden xl:block w-56 flex-shrink-0 sticky top-6 self-start">
+    <aside className="hidden xl:block w-56 shrink-0 sticky top-6 self-start">
       <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3">
         On this page
       </p>
@@ -193,7 +193,7 @@ const GettingStarted = () => {
 
         <div className="relative pl-8 ">
           {/* vertical line */}
-          <div className="absolute left-[7px] top-2 bottom-2 w-px bg-zinc-200 dark:bg-zinc-700" />
+          <div className="absolute left-2 top-2 bottom-2 mb-5 w-0.5 bg-zinc-200 dark:bg-zinc-700" />
 
           {[
             {
@@ -208,6 +208,7 @@ const GettingStarted = () => {
               desc: "The moment your company profile is created, a unique API key is generated and bound exclusively to your account.",
               active: true,
             },
+            
             {
               step: "3",
               label: "Your admin shares the key with you",
@@ -221,9 +222,9 @@ const GettingStarted = () => {
               active: true,
             },
           ].map((item, i) => (
-            <div key={i} className="relative mb-6 last:mb-0">
+            <div key={i} className="relative  mb-6 last:mb-0">
               <div
-                className={`absolute -left-8 top-0.5 w-[15px] h-[15px] rounded-full flex items-center justify-center text-[9px] font-semibold border-2 border-white dark:border-zinc-950 ${
+                className={`absolute -left-8 top-0.5 font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center text-[9px]  border-2 border-white dark:border-zinc-950 dark:font-bold ${
                   item.active
                     ? "bg-[#ff831c] text-white"
                     : "bg-zinc-300 dark:bg-zinc-600 text-zinc-600 dark:text-zinc-300"
