@@ -8,7 +8,7 @@ import { FaPhone } from "react-icons/fa";
 import { BiWrench } from "react-icons/bi";
 import { HiHand } from "react-icons/hi";
 
-
+import { FaBullseye, FaKey, FaLock } from 'react-icons/fa';
 
 import {
   LuPhone,
@@ -284,25 +284,25 @@ const Contactus = () => {
             {/* Conditional hint based on selection */}
             {form.reason === "executive-callback" && (
               <div className="flex gap-2.5 items-start bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg p-3.5 text-xs text-orange-700 dark:text-orange-400">
-                <span className="flex-shrink-0 mt-0.5">📞</span>
+                <span className="flex-shrink-0 mt-2 flex items-center justify-center rotate-90"><FaPhone/></span>
                 <span>Our executive team typically responds within 4 business hours. Please include your preferred callback time in the message below.</span>
               </div>
             )}
             {form.reason === "demo" && (
               <div className="flex gap-2.5 items-start bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-lg p-3.5 text-xs text-blue-700 dark:text-blue-400">
-                <span className="flex-shrink-0 mt-0.5">🎯</span>
+                <span className="flex-shrink-0 mt-2 flex items-center justify-center"><FaBullseye/></span>
                 <span>Demos are 30 minutes and tailored to your use case. Mention your team size and compliance goals in the message and we'll come prepared.</span>
               </div>
             )}
             {form.reason === "api-key" && (
               <div className="flex gap-2.5 items-start bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg p-3.5 text-xs text-amber-700 dark:text-amber-400">
-                <span className="flex-shrink-0 mt-0.5">🔑</span>
+                <span className="flex-shrink-0  mt-0.5 flex items-center justify-center"><FaKey/></span>
                 <span>For urgent API key issues, include your Company ID in the message below so we can resolve it faster.</span>
               </div>
             )}
             {form.reason === "security" && (
               <div className="flex gap-2.5 items-start bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-3.5 text-xs text-red-700 dark:text-red-400">
-                <span className="flex-shrink-0 mt-0.5">🔒</span>
+                <span className="flex-shrink-0 mt-1 flex items-center justify-center"><FaLock/></span>
                 <span>Please do not include sensitive vulnerability details here. We will provide a secure channel once we acknowledge your report.</span>
               </div>
             )}
