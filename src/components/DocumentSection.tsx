@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FileText, FileBadge, Lock, Download, ExternalLink, X, CheckCircle2 } from 'lucide-react';
+// import {AiFillEdit, AiFillStepBackward, AiFillLock } from "react-icons/ai"
 import type { Document } from '../types';
 
 interface DocumentSectionProps {
