@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { AiOutlineDown } from 'react-icons/ai';
 import type { FAQ } from '../types';
 
 interface FAQSectionProps {
@@ -27,7 +27,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ faqs }) => {
                 className="w-full flex justify-between items-center p-5 text-left"
               >
                 <span className={`font-semibold transition-colors duration-200 ${isOpen ? 'text-white' : 'text-slate-300'}`}>{faq.question}</span>
-                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-orange-500' : 'text-slate-500'}`} />
+                <AiOutlineDown className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-orange-500' : 'text-slate-500'}`} />
               </button>
               
               <div 
