@@ -87,14 +87,14 @@ const barColor: Record<string, string> = {
     <div ref={wrapRef} className="relative">
       {tooltip.visible && (
         <div
-          className="absolute bottom-[calc(100%+8px)] z-50 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2.5 text-xs pointer-events-none min-w-[200px]"
+          className="absolute bottom-[calc(100%+8px)] z-50 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg px-3 py-2.5 text-xs pointer-events-none min-w-50"
           style={{ left: tooltip.x }}
         >
           <div className="font-medium text-zinc-800 dark:text-zinc-200 mb-1">{tooltip.date}</div>
           <div className="text-zinc-500 dark:text-zinc-400">{tooltip.msg}</div>
         </div>
       )}
-      <div className="flex flex-1 gap-[4px] items-end h-9">
+      <div className="flex flex-1 gap-1 items-end h-9">
         {bars.map((bar, i) => (
           <div
             key={i}
@@ -127,7 +127,7 @@ const ServiceRow = ({ svc }: { svc: Service }) => {
               className={`text-zinc-400 transition-transform duration-200 ${open ? "rotate-90" : ""}`}
             />
           ) : (
-            <span className="w-[14px]" />
+            <span className="w-3.5" />
           )}
           {svc.name}
         </button>
@@ -150,7 +150,7 @@ const ServiceRow = ({ svc }: { svc: Service }) => {
               className="flex gap-4 items-start py-2.5 border-t border-zinc-100 dark:border-zinc-800"
             >
               <div
-                className={`w-2 h-2 rounded-full flex-shrink-0 mt-1 ${
+                className={`w-2 h-2 rounded-full shrink-0 mt-1 ${
                   inc.type === "red" ? "bg-[#ef4444]" : "bg-[#facc15]"
                 }`}
               />
@@ -195,7 +195,7 @@ const OverallBanner = () => {
 
   return (
     <div className={`flex items-center gap-3 border rounded-xl px-4 py-3 mb-10 ${c.wrap}`}>
-      <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${c.dot}`} />
+      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${c.dot}`} />
       <span className={`text-sm font-medium ${c.text}`}>{c.msg}</span>
       <span className="ml-auto text-xs text-zinc-400 dark:text-zinc-500">Updated at {now}</span>
     </div>

@@ -1,6 +1,6 @@
 import { Card, SectionHeader, Feedback } from "../DocShared";
 
-const Tutorials = () => (
+const GettingStartedTutorials = () => (
   <div className="max-w-5xl mx-auto px-4 md:px-8 py-8 md:py-10">
     <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-zinc-100 mb-2">
       Tutorials
@@ -57,4 +57,4 @@ const Tutorials = () => (
   </div>
 );
 
-export default Tutorials;
+export default GettingStartedTutorials;

@@ -101,7 +101,7 @@ const Callout = ({
   };
   return (
     <div className={`flex gap-2.5 items-start border rounded-lg p-3.5 text-xs leading-relaxed ${styles[variant]}`}>
-      <span className="mt-0.5 flex-shrink-0">{icon}</span>
+      <span className="mt-0.5 shrink-0">{icon}</span>
       <div>{children}</div>
     </div>
   );
@@ -474,7 +474,7 @@ const LogoManagement = () => {
           <div className="mt-4">
             <Callout icon={<FiKey size={13} />} variant="blue">
               All endpoints require the <InlineCode>x-api-key</InlineCode> header.
-              Visit <Link to="/docs/developers-guide/getting-started" className="underline font-medium text-[#ff831c]">Getting Started</Link> if you don't have a key yet.
+              Visit <Link to="/docs/developers-guide/get-started" className="underline font-medium text-[#ff831c]">Getting Started</Link> if you don't have a key yet.
             </Callout>
           </div>
         </div>
