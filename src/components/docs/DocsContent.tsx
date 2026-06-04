@@ -1,4 +1,4 @@
-import { Copy } from 'lucide-react';
+import { BiCopy } from 'react-icons/bi';
 import { useState } from 'react';
 import type { DocBlock, DocPage } from '../../data/docs';
 import { Button } from '../ui/button';
@@ -21,7 +21,7 @@ const CodeBlock = ({ block }: { block: Extract<DocBlock, { type: 'code' }> }) =>
       <div className="flex items-center justify-between border-b border-neutral-800 px-4 py-2">
         <span className="text-xs font-medium text-neutral-400">{block.language}</span>
         <Button variant="ghost" size="sm" className="h-8 text-neutral-300 hover:bg-neutral-800 hover:text-white" onClick={copy}>
-          <Copy size={14} />
+          <BiCopy size={14} />
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </div>
