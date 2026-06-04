@@ -107,7 +107,7 @@ const OnPageNav = () => {
   };
 
   return (
-    <aside className="hidden xl:block w-52 flex-shrink-0 sticky top-6 self-start">
+    <aside className="hidden xl:block w-52 shrink-0 sticky top-6 self-start">
       <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 mb-3">
         On this page
       </p>
@@ -286,7 +286,7 @@ const CompanyProfile = () => {
             <span className="text-zinc-500 dark:text-zinc-400">
               Don't have an API key? Visit{" "}
               <Link
-                to="/docs/developers-guide/getting-started"
+                to="/docs/developers-guide/get-started"
                 className="underline font-medium text-[#ff831c]"
               >
                 Getting Started
