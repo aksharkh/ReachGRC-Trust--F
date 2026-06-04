@@ -9,7 +9,7 @@ import GettingStarted from "./components/DocumentsComponent/GettingStarted";
  
 import Overview from "./components/DocumentsComponent/GettingStartedComponents/Overview";
 import GetStartedForUsers from "./components/DocumentsComponent/GettingStartedComponents/GetStartedForUsers";
-import Tutorials from "./components/DocumentsComponent/GettingStartedComponents/Tutorial";
+import GettingStartedTutorial from "./components/DocumentsComponent/GettingStartedComponents/Tutorial";
 import ConceptsForAdmins from "./components/DocumentsComponent/GettingStartedComponents/ConceptForAdmin"
 import SampleData from "./components/DocumentsComponent/GettingStartedComponents/SampleData";
 import ContactUs from "./components/DocumentsComponent/GettingStartedComponents/ContactUs";
@@ -30,15 +30,20 @@ import HostedTrustCenter from './components/DocumentsComponent/NonDevelopersGuid
 import CustomBranding from './components/DocumentsComponent/NonDevelopersGuide/CustomBranding';
 import Sharing from './components/DocumentsComponent/NonDevelopersGuide/Sharing';
 import FAQ from './components/DocumentsComponent/NonDevelopersGuide/Faq';
+
+import Contactus from './components/DocumentsComponent/ContactUs';
+
 import StatusPage from './components/DocumentsComponent/Status';
 
-const ComingSoon = ({ title }: { title: string }) => (
-  <div className="flex flex-col items-center justify-center h-full text-center px-8">
-    <p className="text-4xl mb-4">🚧</p>
-    <h2 className="text-xl font-semibold text-gray-900 dark:text-zinc-100 mb-2">{title}</h2>
-    <p className="text-sm text-gray-500 dark:text-zinc-400">This section is coming soon.</p>
-  </div>
-);
+import TutorialPage from './components/DocumentsComponent/TutorialsPage';
+
+// const ComingSoon = ({ title }: { title: string }) => (
+//   <div className="flex flex-col items-center justify-center h-full text-center px-8">
+//     <p className="text-4xl mb-4">🚧</p>
+//     <h2 className="text-xl font-semibold text-gray-900 dark:text-zinc-100 mb-2">{title}</h2>
+//     <p className="text-sm text-gray-500 dark:text-zinc-400">This section is coming soon.</p>
+//   </div>
+// );
 
 function App() {
   return (
@@ -58,7 +63,7 @@ function App() {
                 path="get-started-for-users"
                 element={<GetStartedForUsers />}
               />
-              <Route path="tutorials" element={<Tutorials />} />
+              <Route path="tutorials" element={<GettingStartedTutorial />} />
               <Route
                 path="concepts-for-admins"
                 element={<ConceptsForAdmins />}
@@ -116,9 +121,9 @@ function App() {
             </Route>
             <Route
               path="contact-us"
-              element={<ComingSoon title="Contact Us" />}
+              element={<Contactus />}
             />
-            <Route path="tutorial" element={<ComingSoon title="Tutorials" />} />
+            <Route path="tutorial" element={<TutorialPage/>} />
             <Route path="status" element={<StatusPage/>} />
 
             {/* Catch-all redirect */}
