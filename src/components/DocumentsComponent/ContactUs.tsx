@@ -302,7 +302,7 @@ const Contactus = () => {
             )}
             {form.reason === "security" && (
               <div className="flex gap-2.5 items-start bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg p-3.5 text-xs text-red-700 dark:text-red-400">
-                <span className="flex-shrink-0 mt-1 flex items-center justify-center"><FaLock/></span>
+                <span className="shrink-0 mt-1 flex items-center justify-center"><FaLock/></span>
                 <span>Please do not include sensitive vulnerability details here. We will provide a secure channel once we acknowledge your report.</span>
               </div>
             )}
