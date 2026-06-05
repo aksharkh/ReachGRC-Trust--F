@@ -48,12 +48,12 @@ export const SectionHeader: React.FC<SectionHeaderProps> = ({ title, subtitle, s
 
 // ── Feedback ──────────────────────────────────────────────────────────────────
 export const Feedback: React.FC = () => (
-  <div className="border-t border-gray-100 dark:border-zinc-700 pt-6 flex items-center gap-3 mt-4">
+  <div className=" border-gray-100 dark:border-zinc-700 pt-6 flex items-center gap-3 mt-4">
     <span className="text-sm text-gray-500 dark:text-zinc-400">Was this page helpful?</span>
-    <button className="px-4 py-1.5 text-sm border border-gray-200 dark:border-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
+    <button  className="px-4 cursor-pointer py-1.5 text-sm border border-gray-200 dark:border-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
       Yes
     </button>
-    <button className="px-4 py-1.5 text-sm border border-gray-200 dark:border-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
+    <button className="px-4 cursor-pointer py-1.5 text-sm border border-gray-200 dark:border-zinc-600 dark:text-zinc-300 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">
       No
     </button>
   </div>
