@@ -1,4 +1,4 @@
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics } from "@vercel/analytics/react"
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProfile } from './pages/CompanyProfile';
 
