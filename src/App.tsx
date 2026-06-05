@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { CompanyProfile } from './pages/CompanyProfile';
 
@@ -134,6 +135,9 @@ function App() {
           </Route>
         </Routes>
       </Router>
+
+      <Analytics />
+
     </ThemeProvider>
   );
 }
