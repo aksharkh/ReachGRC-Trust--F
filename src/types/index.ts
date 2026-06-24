@@ -57,6 +57,15 @@ export interface Company extends ApiCompany {
   certifications?: string[]; 
   documents?: Document[];
   faqs?: FAQ[];
+  
+  // API credentials and pricing plans
+  apiKey?: string;
+  apiKeyStatus?: 'ACTIVE' | 'INACTIVE' | 'EXPIRED';
+  apiKeyIssuedAt?: string;
+  apiKeyExpiresAt?: string;
+  subscriptionPlan?: 'FREE' | 'GROWTH' | 'ENTERPRISE';
+  subscriptionStatus?: 'ACTIVE' | 'PAST_DUE' | 'CANCELLED';
+  subscriptionExpiresAt?: string;
 }
 
 export interface TrustBadgeProps {

@@ -5,14 +5,25 @@ interface PreloaderProps {
   isLoading: boolean;
 }
 
+/**
+ * Preloader is a full-screen loading overlay.
+ * 
+ * Features:
+ *   - Renders a loading spinner with a shield logo and pulsing text
+ *   - Listens to the `isLoading` prop changes. When loading is finished,
+ *     it sets the `fade` state to trigger a CSS opacity fade-out transition.
+ *   - After 500ms (matching the transition duration), it unmounts from the DOM
+ *     by setting `show` to false.
+ */
 export const Preloader: React.FC<PreloaderProps> = ({ isLoading }) => {
   const [show, setShow] = useState(true);
   const [fade, setFade] = useState(false);
 
+  // Trigger fade out and unmount when loading completes
   useEffect(() => {
     if (!isLoading) {
       setFade(true);
-      const timer = setTimeout(() => setShow(false), 500); // Wait for fade out
+      const timer = setTimeout(() => setShow(false), 500); // Match CSS transition duration
       return () => clearTimeout(timer);
     }
   }, [isLoading]);
