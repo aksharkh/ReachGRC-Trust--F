@@ -1,7 +1,7 @@
 import { PiEyedropperSampleFill, PiTargetThin } from "react-icons/pi";
 import {  SectionHeader, Feedback } from "../DocShared";
 
-import type {OverviewInterface}  from "@/types/GettingStratedPage";
+import type {CardInterface}  from "@/types/GettingStratedPage";
 
 import {
   Card,
@@ -16,7 +16,7 @@ import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
 
-const gettingStartedWithReachGRC : OverviewInterface[] = [
+const gettingStartedWithReachGRC : CardInterface[] = [
   {
     title: "Before you begin",
     description: "Check prerequisites for using reachGRC and connecting to your organisation's account.",
@@ -40,7 +40,7 @@ const gettingStartedWithReachGRC : OverviewInterface[] = [
 
 ]
 
-const StartLearning: OverviewInterface[] = [
+const StartLearning: CardInterface[] = [
   {
     title:"Domains & Controls",
     description:"Create domains, add controls, and run your first compliance assessment.",
@@ -61,7 +61,7 @@ const StartLearning: OverviewInterface[] = [
   },
 ]
 
-const SampleSet: OverviewInterface[] = [
+const SampleSet: CardInterface[] = [
   {
     title:"ISO 27001 sample controls",
     description:"A read-only control library mapped to ISO/IEC 27001:2022 for evaluation and testing.",
