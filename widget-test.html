@@ -28,13 +28,19 @@
         <p>We take security seriously. Check our Trust Score below.</p>
     </div>
 
-    <!-- The Widget Container -->
-    <div data-reach-trust-widget data-company-id="1"></div>
+    <!-- The Widget Container (Authenticated via API Key) -->
+    <h3>GRC Trust Center Widget (Authenticated via Valid API Key)</h3>
+    <div data-reach-trust-widget data-api-key="rgc_a3f9c2e1b74d6085fa91dc23e0b58764"></div>
 
     <br><br>
 
-    <h3>Another Widget Instance (Globex)</h3>
-    <div data-reach-trust-widget data-company-id="2"></div>
+    <h3>GRC Trust Center Widget (Invalid API Key Test)</h3>
+    <div data-reach-trust-widget data-api-key="rgc_invalid_key_1234"></div>
+
+    <br><br>
+
+    <h3>GRC Trust Center Widget (Missing API Key Test)</h3>
+    <div data-reach-trust-widget></div>
 
     <!-- The Widget Script -->
     <script src="./public/widget/widget.umd.js"></script>

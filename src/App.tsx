@@ -2,6 +2,9 @@ import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { CompanyProfile } from "./pages/CompanyProfile";
 import { ThemeProvider } from "./ThemeContext";
+import { StatusPage as SystemStatusPage } from "./pages/StatusPage";
+import { AdminLogin } from "./pages/AdminLogin";
+import { AdminGuard } from "./components/AdminGuard";
 
 // Layout & Menu Configurations
 import DocsLayout from "./layouts/DocsLayout";
@@ -50,7 +53,9 @@ function App() {
         <Routes>
           {/* Main Landing & Admin Pages */}
           <Route path="/company/:id" element={<CompanyProfile />} />
-          <Route path="/admin/company/:id" element={<CompanyProfile />} />
+          <Route path="/admin/company/:id" element={<AdminGuard><CompanyProfile /></AdminGuard>} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/status" element={<SystemStatusPage />} />
           <Route path="/" element={<Navigate to="/company/1" replace />} />
 
           {/* Documentation Root Wrapper Layout */}

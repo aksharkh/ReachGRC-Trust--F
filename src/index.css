@@ -145,3 +145,37 @@
   background-image: radial-gradient(rgba(255, 138, 28, 0.03) 1px, transparent 0);
   background-size: 16px 16px;
 }
+
+@keyframes border-flow-slide {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.border-flow-card {
+  position: relative;
+  padding: 1.5px;
+  background: transparent;
+  transition: background 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.border-flow-card:hover {
+  background: linear-gradient(90deg, #FF3918, #FF8A1C, #F7D87F, #FF8A1C, #FF3918);
+  background-size: 300% 300%;
+  animation: border-flow-slide 3s linear infinite;
+  box-shadow: 0 20px 45px -12px rgba(255, 138, 28, 0.15);
+}
+
+/* Custom View Transition styles for circular theme switcher */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+

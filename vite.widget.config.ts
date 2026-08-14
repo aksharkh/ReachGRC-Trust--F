@@ -5,9 +5,16 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
   build: {
     outDir: 'public/widget',
     emptyOutDir: false, // Don't delete other public assets
+    minify: false,
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, 'src/widget-entry.tsx'),
       name: 'ReachTrustWidget',

@@ -34,7 +34,7 @@ const calculateStats = (domains: ApiCompany['domains']): SecurityStats => {
   };
 };
 
-const adaptCompanyData = (apiData: ApiCompany): Company => {
+export const adaptCompanyData = (apiData: ApiCompany): Company => {
   const stats = calculateStats(apiData.domains);
   
   return {

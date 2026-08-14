@@ -33,6 +33,9 @@ export interface ApiCompany {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  locationName?: string | null;
 }
 
 export interface Document {
@@ -41,6 +44,8 @@ export interface Document {
   type: string;
   url?: string;
   requiresVerification: boolean;
+  label?: string;
+  fileData?: string;
 }
 
 export interface FAQ {

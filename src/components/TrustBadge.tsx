@@ -1,3 +1,4 @@
+import React from 'react';
 import { ShieldCheck, Shield, Activity, FileCheck } from 'lucide-react';
 import type { Company } from '../types';
 
@@ -6,12 +7,21 @@ interface TrustBadgeProps {
   onClick?: () => void;
   className?: string;
   theme?: 'light' | 'dark';
+  detailed?: boolean;
 }
 
-export const TrustBadge = ({ company, onClick, className = '', theme = 'light' }: TrustBadgeProps) => {
+export const TrustBadge = ({ company, onClick, className = '', theme = 'light', detailed = false }: TrustBadgeProps) => {
   const { stats } = company;
-  
   const isDark = theme === 'dark';
+
+  const handleScrollTo = (e: React.MouseEvent, sectionId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = document.getElementById(sectionId);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <div 
@@ -67,44 +77,89 @@ export const TrustBadge = ({ company, onClick, className = '', theme = 'light' }
             Trust Center Grade
           </p>
         </div>
-        <div className="relative">
+        
+        {/* SVG Progress Ring Score Medal */}
+        <div className="relative flex items-center justify-center shrink-0">
           {/* Glowing Badge Halo */}
-          <div className="absolute -inset-2 bg-gradient-to-tr from-brand-red/10 via-brand-orange/20 to-brand-yellow-dark/15 rounded-full blur-md opacity-75 animate-pulse" />
-          <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-brand-red via-brand-orange to-brand-yellow-dark p-[4px] shadow-[0_8px_20px_rgba(255,138,28,0.25)] flex items-center justify-center">
-            <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center border border-white/10">
-              <span className="font-black text-2xl tracking-tighter text-transparent bg-gradient-to-tr from-brand-yellow-light via-brand-yellow-dark to-white bg-clip-text">
-                {stats.grade}
-              </span>
+          <div className="absolute inset-0 bg-gradient-to-tr from-brand-red/10 via-brand-orange/20 to-brand-yellow-dark/15 rounded-full blur-md opacity-75 animate-pulse pointer-events-none" />
+          
+          <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 72 72">
+            <defs>
+              <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FF3918" />
+                <stop offset="50%" stopColor="#FF8A1C" />
+                <stop offset="100%" stopColor="#F7D87F" />
+              </linearGradient>
+            </defs>
+            {/* Background Dotted Ring */}
+            <circle
+              cx="36"
+              cy="36"
+              r="30"
+              className="stroke-zinc-300 dark:stroke-zinc-800 fill-transparent"
+              strokeWidth="2"
+              strokeDasharray="3,3"
+            />
+            {/* Active Solid Score Arc */}
+            <circle
+              cx="36"
+              cy="36"
+              r="30"
+              stroke="url(#scoreGradient)"
+              fill="transparent"
+              strokeWidth="3.5"
+              strokeDasharray="188.5"
+              strokeDashoffset={188.5 - (stats.score / 100) * 188.5}
+              strokeLinecap="round"
+              className="transition-all duration-1000 ease-out"
+            />
+          </svg>
+          
+          {/* Inner Content Overlay */}
+          <div className="absolute flex flex-col items-center justify-center">
+            <span className="font-black text-lg tracking-tighter text-transparent bg-gradient-to-tr from-brand-yellow-light via-brand-yellow-dark to-white bg-clip-text">
+              {stats.grade}
+            </span>
+            <span className="text-[8.5px] font-black uppercase text-zinc-400 dark:text-zinc-500 tracking-wider">
+              {stats.score}/100
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Metadata Telemetry Badges - ONLY in detailed view */}
+      {detailed && (
+        <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
+          <div 
+            onClick={(e) => handleScrollTo(e, 'journey-section')}
+            className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer hover:border-brand-orange/45 hover:bg-brand-orange/5 transition-all duration-300 ${
+              isDark ? 'bg-zinc-900/40 border-zinc-850/60' : 'bg-zinc-50 border-zinc-200'
+            }`}
+          >
+            <Activity className="w-4.5 h-4.5 text-brand-orange shrink-0 animate-pulse" />
+            <div className="min-w-0">
+              <p className="text-[9px] text-zinc-400 dark:text-zinc-550 uppercase tracking-wider font-semibold">Telemetry</p>
+              <p className="text-[10px] font-bold truncate text-green-500">Live Syncing</p>
+            </div>
+          </div>
+          <div 
+            onClick={(e) => handleScrollTo(e, 'controls-section')}
+            className={`p-3 rounded-xl border flex items-center gap-2.5 cursor-pointer hover:border-brand-red/45 hover:bg-brand-red/5 transition-all duration-300 ${
+              isDark ? 'bg-zinc-900/40 border-zinc-850/60' : 'bg-zinc-50 border-zinc-200'
+            }`}
+          >
+            <FileCheck className="w-4.5 h-4.5 text-brand-red shrink-0" />
+            <div className="min-w-0">
+              <p className="text-[9px] text-zinc-400 dark:text-zinc-550 uppercase tracking-wider font-semibold">Controls</p>
+              <p className="text-[10px] font-bold truncate text-zinc-700 dark:text-zinc-250">100% Verified</p>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Metadata Telemetry Badges */}
-      <div className="grid grid-cols-2 gap-3 mb-6 relative z-10">
-        <div className={`p-3 rounded-xl border flex items-center gap-2.5 ${
-          isDark ? 'bg-zinc-900/40 border-zinc-850/60' : 'bg-zinc-50 border-zinc-200'
-        }`}>
-          <Activity className="w-4.5 h-4.5 text-brand-orange shrink-0 animate-pulse" />
-          <div className="min-w-0">
-            <p className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold">Telemetry</p>
-            <p className="text-[10px] font-bold truncate text-green-500">Live Syncing</p>
-          </div>
-        </div>
-        <div className={`p-3 rounded-xl border flex items-center gap-2.5 ${
-          isDark ? 'bg-zinc-900/40 border-zinc-850/60' : 'bg-zinc-50 border-zinc-200'
-        }`}>
-          <FileCheck className="w-4.5 h-4.5 text-brand-red shrink-0" />
-          <div className="min-w-0">
-            <p className="text-[9px] text-zinc-400 dark:text-zinc-500 uppercase tracking-wider font-semibold">Controls</p>
-            <p className="text-[10px] font-bold truncate text-zinc-700 dark:text-zinc-250">100% Verified</p>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Footer Powered By */}
       <div className={`flex items-center justify-between text-[10px] uppercase tracking-wider font-semibold ${
-        isDark ? 'text-zinc-550 border-zinc-850' : 'text-zinc-450 border-zinc-200'
+        isDark ? 'text-zinc-550 border-zinc-850' : 'text-zinc-455 border-zinc-200'
       } pt-4 border-t relative z-10`}>
         <div className="flex items-center gap-1.5 text-zinc-550 dark:text-zinc-400 group-hover:text-brand-orange transition-colors">
           <Shield className="w-3.5 h-3.5" />
