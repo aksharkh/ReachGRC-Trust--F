@@ -3,12 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { fetchCompanyData } from '../services/api';
 import { useTheme } from '../ThemeContext';
 import { Preloader } from '../components/Preloader';
-import { TrustBadge } from '../components/TrustBadge';
 import { SecurityControlsGrid } from '../components/SecurityControlsGrid';
 import { DocumentSection } from '../components/DocumentSection';
 import { FAQSection } from '../components/FAQSection';
 import { ComplianceJourney } from '../components/ComplianceJourney';
-import type { Company, Domain } from '../types';
+import type { Company, Domain, JourneyMilestone } from '../types';
 import { LocationGlobe } from '../components/LocationGlobe';
 import { Toaster, toast } from 'sonner';
 
@@ -21,14 +20,20 @@ import { TabDomainsControls } from '../components/admin/TabDomainsControls';
 import { TabMediaDocuments } from '../components/admin/TabMediaDocuments';
 import { TabApiCredentials } from '../components/admin/TabApiCredentials';
 import { TabBillingSubscriptions } from '../components/admin/TabBillingSubscriptions';
+import { TabQuestionnaires } from '../components/admin/TabQuestionnaires';
 import { CreateCompanyModal } from '../components/admin/CreateCompanyModal';
 import { FilePreviewModal } from '../components/admin/FilePreviewModal';
+import { TrustHeader } from '../components/TrustHeader';
+import { SecurityHero } from '../components/SecurityHero';
+import { FrameworkBadges } from '../components/FrameworkBadges';
+import { SubprocessorsSection } from '../components/SubprocessorsSection';
+import { SecurityQuestionnaireModal } from '../components/SecurityQuestionnaireModal';
+import reachGrcLogo from '../assets/REACH_GRC.png';
 
 import { 
   HelpCircle,
   Shield,
-  Sun,
-  Moon
+  Menu
 } from 'lucide-react';
 
 /**
@@ -46,7 +51,8 @@ export const CompanyProfile = () => {
   
   // Admin Mode detection
   const isAdmin = window.location.pathname.startsWith('/admin');
-  const [adminTab, setAdminTab] = useState<'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing'>('profile');
+  const [adminTab, setAdminTab] = useState<'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing' | 'inquiries'>('profile');
+  const [adminMobileSidebarOpen, setAdminMobileSidebarOpen] = useState(false);
   
   // Sidebar Search
   const [allCompanies, setAllCompanies] = useState<Company[]>([]);
@@ -63,6 +69,9 @@ export const CompanyProfile = () => {
 
   // Domains & Controls tree editor state
   const [domains, setDomains] = useState<Domain[]>([]);
+
+  // Compliance Journey milestones state
+  const [milestones, setMilestones] = useState<JourneyMilestone[]>([]);
 
   // Resources state
   const [resources, setResources] = useState<any[]>([]);
@@ -90,6 +99,7 @@ export const CompanyProfile = () => {
   // Header Interactive States
   const [globalSearch, setGlobalSearch] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
+  const [isQuestionnaireOpen, setIsQuestionnaireOpen] = useState(false);
 
   // JWT Helper authorization headers
   const getAuthHeaders = (extraHeaders: Record<string, string> = {}): Record<string, string> => {
@@ -115,6 +125,11 @@ export const CompanyProfile = () => {
           setProfileLocationName(data.locationName ?? '');
           if (data.domains) {
             setDomains(JSON.parse(JSON.stringify(data.domains))); // Deep copy for local edits
+          }
+          if (data.milestones) {
+            setMilestones(JSON.parse(JSON.stringify(data.milestones)));
+          } else {
+            setMilestones([]);
           }
         }
         setLoading(false);
@@ -307,21 +322,22 @@ export const CompanyProfile = () => {
     }
   };
 
-  // GRC Catalog updates (domains & controls tree editor)
+  // GRC Catalog updates (domains & controls tree editor + Compliance Journey milestones)
   const saveDomainsAndControls = async () => {
     if (!company) return;
-    toast.loading("Saving GRC Catalog...", { id: "save-grc" });
+    toast.loading("Saving GRC Catalog & Compliance Journey...", { id: "save-grc" });
     try {
       const res = await fetch(`http://localhost:8081/api/trust/${company.id}`, {
         method: "PUT",
         headers: getAuthHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
           ...company,
-          domains: domains
+          domains: domains,
+          milestones: milestones
         })
       });
       if (res.ok) {
-        toast.success("GRC Catalog updated successfully!", { id: "save-grc" });
+        toast.success("GRC Catalog & Roadmap saved successfully!", { id: "save-grc" });
         loadCompanyData();
       } else {
         toast.error("Failed to save changes.", { id: "save-grc" });
@@ -625,8 +641,9 @@ export const CompanyProfile = () => {
 
   const handleLogout = () => {
     sessionStorage.removeItem('isAdminAuthenticated');
+    sessionStorage.removeItem('adminToken');
     toast.success("Administrator session closed.");
-    navigate('/company/1');
+    navigate('/admin/login');
   };
 
   // Avatar / Logo URLs configurations
@@ -649,39 +666,95 @@ export const CompanyProfile = () => {
         {/* Outer Inset Shell Background (relative layout to support absolute combined curved header bar overlay) */}
         <div className="relative w-full h-full flex flex-col">
           
-          {/* Combined Curved Header Bar (Axoraa Style) */}
-          <NotchHeader 
-            company={company}
-            adminTab={adminTab}
-            setAdminTab={setAdminTab}
-            globalSearch={globalSearch}
-            setGlobalSearch={setGlobalSearch}
-            showNotifications={showNotifications}
-            setShowNotifications={setShowNotifications}
-            sheetConfig={sheetConfig}
-            handleToggleActiveState={handleToggleActiveState}
-          />
+          {/* Combined Curved Header Bar (Axoraa Style - Desktop Only) */}
+          <div className="hidden lg:block">
+            <NotchHeader 
+              company={company}
+              adminTab={adminTab}
+              setAdminTab={setAdminTab}
+              globalSearch={globalSearch}
+              setGlobalSearch={setGlobalSearch}
+              showNotifications={showNotifications}
+              setShowNotifications={setShowNotifications}
+              sheetConfig={sheetConfig}
+              handleToggleActiveState={handleToggleActiveState}
+            />
+          </div>
+
+          {/* Mobile Admin Navigation Header (< lg) */}
+          <div className="lg:hidden flex items-center justify-between p-3.5 bg-[#0a0c12] border-b border-[#1a1e2b] rounded-t-[1.5rem] text-white shrink-0 z-20">
+            <button
+              onClick={() => setAdminMobileSidebarOpen(true)}
+              className="p-2 rounded-xl bg-[#131622] hover:bg-[#1f2438] border border-[#1f2438] text-zinc-300 hover:text-white transition-colors cursor-pointer flex items-center gap-2"
+            >
+              <Menu size={16} />
+              <span className="text-xs font-bold uppercase tracking-wider">Menu</span>
+            </button>
+
+            <div className="flex items-center gap-2">
+              <img src={reachGrcLogo} alt="ReachGRC" className="w-5 h-5 object-contain" />
+              <span className="text-xs font-black uppercase tracking-wider text-white truncate max-w-[130px]">
+                {company ? company.companyName : 'Admin'}
+              </span>
+            </div>
+
+            <button
+              onClick={(e) => toggleTheme(e)}
+              className="p-2 rounded-xl bg-[#131622] hover:bg-[#1f2438] border border-[#1f2438] text-zinc-300 hover:text-white transition-colors cursor-pointer text-xs"
+              title="Toggle Theme"
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </button>
+          </div>
+
+          {/* Mobile Slide-Over Drawer (< lg) */}
+          {adminMobileSidebarOpen && (
+            <div className="lg:hidden fixed inset-0 z-50 flex animate-in fade-in duration-200">
+              <div 
+                className="fixed inset-0 bg-black/75 backdrop-blur-xs transition-opacity"
+                onClick={() => setAdminMobileSidebarOpen(false)}
+              />
+              <div className="relative z-10 w-80 max-w-[85vw] h-full shadow-2xl animate-in slide-in-from-left duration-250">
+                <AdminSidebar 
+                  id={id || ''}
+                  company={company}
+                  allCompanies={allCompanies}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  setShowCreateModal={setShowCreateModal}
+                  adminTab={adminTab}
+                  setAdminTab={setAdminTab}
+                  theme={theme}
+                  toggleTheme={toggleTheme}
+                  handleLogout={handleLogout}
+                  onCloseMobile={() => setAdminMobileSidebarOpen(false)}
+                />
+              </div>
+            </div>
+          )}
 
           {/* Nested Unified Canvas Frame */}
           <div className="w-full bg-[#f4f5f8] dark:bg-[#0d0f17] border border-[#1a1e2b] rounded-[1.5rem] shadow-2xl flex overflow-hidden flex-1 min-h-0">
             
-            {/* Sidebar (Left Column) */}
-            <AdminSidebar 
-              id={id || ''}
-              company={company}
-              allCompanies={allCompanies}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              setShowCreateModal={setShowCreateModal}
-              adminTab={adminTab}
-              setAdminTab={setAdminTab}
-              theme={theme}
-              toggleTheme={toggleTheme}
-              handleLogout={handleLogout}
-            />
+            {/* Desktop Sidebar (Left Column - >= lg) */}
+            <div className="hidden lg:flex shrink-0 h-full">
+              <AdminSidebar 
+                id={id || ''}
+                company={company}
+                allCompanies={allCompanies}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                setShowCreateModal={setShowCreateModal}
+                adminTab={adminTab}
+                setAdminTab={setAdminTab}
+                theme={theme}
+                toggleTheme={toggleTheme}
+                handleLogout={handleLogout}
+              />
+            </div>
 
             {/* Main Work Area */}
-            <main className="flex-1 bg-white dark:bg-[#090b11] overflow-y-auto p-8 pt-20 relative flex flex-col justify-between">
+            <main className="flex-1 bg-white dark:bg-[#090b11] overflow-y-auto p-4 sm:p-6 lg:p-8 pt-6 sm:pt-8 lg:pt-20 relative flex flex-col justify-between">
               {/* Vibrant background glows wrapped in absolute-inset-overflow-hidden to fix scrollbars */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                 <div className="absolute top-[-10%] right-[-5%] w-[450px] h-[450px] rounded-full bg-brand-red/8 blur-[120px] mix-blend-screen" />
@@ -709,7 +782,9 @@ export const CompanyProfile = () => {
                               ? 'Media & Documents' 
                               : adminTab === 'apikey' 
                                 ? 'API Credentials' 
-                                : 'Billing & Subscriptions'}
+                                : adminTab === 'billing'
+                                  ? 'Billing & Subscriptions'
+                                  : 'Security Inquiries'}
                     </span>
                   </div>
 
@@ -781,6 +856,8 @@ export const CompanyProfile = () => {
                   <TabDomainsControls 
                     domains={domains}
                     setDomains={setDomains}
+                    milestones={milestones}
+                    setMilestones={setMilestones}
                     globalSearch={globalSearch}
                     saveDomainsAndControls={saveDomainsAndControls}
                   />
@@ -813,6 +890,10 @@ export const CompanyProfile = () => {
                     handleUpgrade={handleUpgrade}
                     handleCancelSubscription={handleCancelSubscription}
                   />
+                )}
+
+                {adminTab === 'inquiries' && (
+                  <TabQuestionnaires company={company} />
                 )}
 
               </div>
@@ -907,151 +988,207 @@ export const CompanyProfile = () => {
       {company && (
         <div className="relative z-10 w-full flex flex-col items-center">
           
-          {/* Floating Theme Toggle Switcher & View Mode Controls */}
-          <div className="absolute top-6 right-6 z-30 flex flex-wrap items-center justify-end gap-3 max-w-[calc(100vw-2rem)]">
-            {/* System Status Redirect */}
-            <button
-              onClick={() => navigate('/status')}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-green-500/10 hover:bg-green-500/15 text-green-600 dark:text-green-400 border border-green-500/20 backdrop-blur-md text-[10px] font-black uppercase tracking-wider cursor-pointer hover:scale-105 active:scale-95 transition-all shadow-sm shrink-0"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              Status: Operational
-            </button>
+          {/* Fixed Unified Glassmorphic Navigation Header */}
+          <TrustHeader 
+            company={company}
+            theme={theme}
+            toggleTheme={toggleTheme}
+            detailedView={detailedView}
+            setDetailedView={setDetailedView}
+          />
 
-            {/* View Mode Toggle Pill */}
-            <div className="flex bg-white/75 dark:bg-[#131622]/60 p-1 rounded-2xl border border-zinc-200 dark:border-[#1f2438] backdrop-blur-md shadow-sm shrink-0">
-              <button
-                onClick={() => setDetailedView(false)}
-                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                  !detailedView
-                    ? 'bg-gradient-to-r from-brand-red to-brand-orange text-white shadow-md'
-                    : 'text-zinc-550 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                }`}
-              >
-                Normal
-              </button>
-              <button
-                onClick={() => setDetailedView(true)}
-                className={`px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                  detailedView
-                    ? 'bg-gradient-to-r from-brand-red to-brand-orange text-white shadow-md'
-                    : 'text-zinc-555 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white'
-                }`}
-              >
-                Detailed
-              </button>
-            </div>
+          {/* Spacer to push content below the fixed header */}
+          <div className="h-14 sm:h-16 w-full shrink-0 pointer-events-none" />
 
-            {/* Theme Toggle */}
-            <button
-              onClick={(e) => toggleTheme(e)}
-              className="p-3 rounded-2xl bg-white/75 dark:bg-[#131622]/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-650 dark:text-zinc-355 border border-zinc-200 dark:border-[#1f2438] backdrop-blur-md transition-all cursor-pointer shadow-sm hover:scale-105 active:scale-95 shrink-0"
-              title="Toggle Theme"
-            >
-              {theme === 'dark' ? <Sun size={15} className="text-brand-yellow-dark" /> : <Moon size={15} className="text-zinc-650" />}
-            </button>
-          </div>
-
-          {/* Main GRC content */}
-          <div id="trust-badge" className="w-full max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8 space-y-16 relative z-10">
+          {/* Main Content Body */}
+          <div id="overview-section" className="w-full max-w-[92rem] mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 relative z-10">
             
-            {/* Split Sidebar & Main Details */}
-            <div className="grid lg:grid-cols-12 gap-6 lg:gap-10">
-              {/* Left Sidebar */}
-              <div className="lg:col-span-12 xl:col-span-4 space-y-10">
-                 <div className="sticky top-12 space-y-10">
-                  
-                  {/* Trust Badge Card wrapped in border-flow on hover */}
-                  <div className="border-flow-card rounded-[2rem]">
-                    <TrustBadge 
-                      company={{ ...company, logoUrl: displayLogoUrl }} 
-                      theme={theme} 
-                      className="w-full bg-white dark:bg-[#090b11] rounded-[calc(2rem-1.5px)] hover:border-transparent border border-zinc-200 dark:border-[#1f2438]" 
-                      detailed={detailedView} 
-                    />
-                  </div>
+            {/* Executive Security Hero Card (SafeBase & Sprinto style) */}
+            <SecurityHero 
+              company={{ ...company, logoUrl: displayLogoUrl }}
+              theme={theme}
+              detailed={detailedView}
+              onRequestAccess={() => {
+                const el = document.getElementById('documents-section');
+                if (el) {
+                  const targetPosition = el.getBoundingClientRect().top + window.pageYOffset - 80;
+                  window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+              }}
+            />
 
-                  {/* Location Globe visualizer card */}
-                  <div className="border-flow-card rounded-[2rem]">
-                    <LocationGlobe 
-                      theme={theme} 
-                      latitude={company.latitude ?? undefined} 
-                      longitude={company.longitude ?? undefined} 
-                      locationName={company.locationName ?? undefined} 
-                    />
-                  </div>
- 
-                  {/* Documents Card wrapped in border-flow on hover */}
-                  <div className="border-flow-card rounded-[2rem]">
-                    <div className="card-pattern-light dark:card-pattern-dark rounded-[calc(2rem-1.5px)] shadow-xl border border-zinc-200 dark:border-[#1f2438] p-6 sm:p-8 lg:p-10 hover:border-transparent relative overflow-hidden group/docs bg-white dark:bg-[#090b11]">
-                      <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-brand-orange/5 blur-3xl pointer-events-none transition-transform duration-700 group-hover/docs:scale-150" />
-                      <div className="relative z-10">
-                        <DocumentSection 
-                          documents={[
-                            ...resources
-                              .filter(r => r.fileName.toLowerCase().endsWith('.pdf'))
-                              .map(r => ({
-                                id: String(r.fileId),
-                                name: r.fileName.replace(/\.pdf$/i, '').replace(/_/g, ' '),
-                                type: 'PDF',
-                                requiresVerification: r.label !== 'PUBLIC',
-                                label: r.label || 'PUBLIC',
-                                fileData: r.fileData
-                              })),
-                            { id: 'privacy-policy', name: 'Privacy Policy', type: 'Link', requiresVerification: false, url: '#', label: 'PUBLIC' }
-                          ]} 
-                          detailed={detailedView} 
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            {/* Verified Compliance Frameworks & Certifications Strip */}
+            <FrameworkBadges theme={theme} detailed={detailedView} />
+
+            {/* Continuous Security Controls Grid (3-Column SafeBase/Sprinto style) */}
+            <SecurityControlsGrid domains={company.domains} theme={theme} detailed={detailedView} />
+
+            {/* Resources & Compliance Documents Catalog */}
+            <DocumentSection 
+              documents={[
+                ...resources
+                  .filter(r => r.fileName.toLowerCase().endsWith('.pdf'))
+                  .map(r => ({
+                    id: String(r.fileId),
+                    name: r.fileName.replace(/\.pdf$/i, '').replace(/_/g, ' '),
+                    type: 'PDF',
+                    requiresVerification: r.label !== 'PUBLIC',
+                    label: r.label || 'PUBLIC',
+                    fileData: r.fileData
+                  })),
+                { id: 'privacy-policy', name: 'Privacy Policy', type: 'Link', requiresVerification: false, url: '#', label: 'PUBLIC' }
+              ]} 
+              detailed={detailedView} 
+            />
+
+            {/* Verified Cloud Subprocessors & Infrastructure */}
+            <SubprocessorsSection theme={theme} detailed={detailedView} />
+
+            {/* Compliance Roadmap & Primary Hosting Datacenter Location + Due Diligence Support */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+              <div className="lg:col-span-7 xl:col-span-7">
+                <ComplianceJourney theme={theme} milestones={company.milestones} detailed={detailedView} />
               </div>
- 
-              {/* Main Content Area */}
-              <div className="lg:col-span-12 xl:col-span-8 space-y-10">
-                
-                {/* Controls Grid wrapped in border-flow on hover */}
-                <div id="controls-section" className="border-flow-card rounded-[2.5rem]">
-                  <div className="card-pattern-light dark:card-pattern-dark rounded-[calc(2.5rem-1.5px)] shadow-xl border border-zinc-200 dark:border-[#1f2438] p-5 sm:p-8 md:p-12 hover:border-transparent relative overflow-hidden group/grid bg-white dark:bg-[#090b11]">
-                    {/* Top red-to-orange gradient highlight */}
-                    <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-red to-brand-orange z-25" />
-                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-brand-orange/30 to-transparent opacity-0 group-hover/grid:opacity-100 transition-opacity duration-1000 pointer-events-none" />
-                    <SecurityControlsGrid domains={company.domains} theme={theme} detailed={detailedView} />
-                  </div>
-                </div>
+              <div className="lg:col-span-5 xl:col-span-5 flex flex-col gap-6">
+                <LocationGlobe 
+                  theme={theme} 
+                  latitude={company.latitude ?? undefined} 
+                  longitude={company.longitude ?? undefined} 
+                  locationName={company.locationName ?? undefined} 
+                />
 
-                {/* Compliance Journey wrapped in border-flow on hover */}
-                <div id="journey-section" className="border-flow-card rounded-[2.5rem]">
-                  <div className="card-pattern-light dark:card-pattern-dark rounded-[calc(2.5rem-1.5px)] shadow-xl border border-zinc-200 dark:border-[#1f2438] p-5 sm:p-8 md:p-12 hover:border-transparent transition-all duration-500 bg-white dark:bg-[#090b11]">
-                    <ComplianceJourney theme={theme} />
+                {/* Vendor Due Diligence & Security Questionnaire Card */}
+                <div className={`p-5 sm:p-6 rounded-3xl border transition-all duration-300 flex flex-col justify-between ${
+                  theme === 'dark' 
+                    ? 'bg-zinc-900/40 border-zinc-800/80 shadow-sm' 
+                    : 'bg-white border-zinc-200/80 shadow-[0_2px_8px_rgba(0,0,0,0.03)]'
+                }`}>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-[9.5px] font-mono font-bold tracking-wider uppercase text-brand-orange">
+                        <span>Vendor Due Diligence</span>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[9px] font-mono font-bold uppercase">
+                        SIG • CAIQ • VSA
+                      </span>
+                    </div>
+
+                    <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-white tracking-tight">
+                      Need a Custom Security Assessment?
+                    </h3>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed font-normal">
+                      Our compliance team supports custom SIG, CAIQ, VSA, and RFP questionnaire workflows with fast 48-hour turnarounds.
+                    </p>
                   </div>
-                </div>
- 
-                {/* FAQ wrapped in border-flow on hover */}
-                <div className="border-flow-card rounded-[2.5rem]">
-                  <div className="card-pattern-light dark:card-pattern-dark rounded-[calc(2.5rem-1.5px)] shadow-xl border border-zinc-200 dark:border-[#1f2438] p-5 sm:p-8 md:p-12 hover:border-transparent bg-white dark:bg-[#090b11]">
-                    <FAQSection faqs={company.faqs} />
+
+                  <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-zinc-800/80">
+                    <button
+                      onClick={() => setIsQuestionnaireOpen(true)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-red to-brand-orange text-white text-xs font-bold uppercase tracking-wider hover:opacity-95 transition-all shadow-md shadow-brand-orange/20 cursor-pointer text-center"
+                    >
+                      Request Security Questionnaire
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
  
+            {/* Security FAQs */}
+            <FAQSection 
+              faqs={company.faqs} 
+              theme={theme} 
+              companyName={company.companyName}
+              companyId={company.id} 
+              showQuestionnaireBanner={false}
+            />
+
+            {/* Interactive Security Questionnaire Modal */}
+            <SecurityQuestionnaireModal 
+              isOpen={isQuestionnaireOpen} 
+              onClose={() => setIsQuestionnaireOpen(false)} 
+              companyName={company.companyName}
+              companyId={company.id}
+            />
+
           </div>
 
-          {/* Minimalist Powered By Footer */}
-          <footer className="w-full relative z-10 py-12 px-6 sm:px-8 border-t border-zinc-200/50 dark:border-[#1f2438] bg-zinc-50/10 dark:bg-black/10 backdrop-blur-sm mt-16 text-center">
-            <div className="max-w-xl mx-auto space-y-2.5">
-              <p className="text-[9px] tracking-[0.2em] font-bold text-zinc-400 dark:text-zinc-550 uppercase">
-                Continuous GRC Compliance
-              </p>
-              <div className="flex items-center justify-center gap-1.5 text-xs text-zinc-650 dark:text-zinc-355 font-medium">
-                <span>Powered by</span>
-                <span className="font-black bg-gradient-to-r from-brand-red to-brand-orange bg-clip-text text-transparent tracking-wider">REACH GRC</span>
+          {/* Minimalist Modern Footer */}
+          <footer className="w-full relative z-10 border-t border-zinc-200/60 dark:border-zinc-800/60 bg-transparent mt-16 sm:mt-24 py-8 sm:py-10 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+              
+              {/* Brand & Tagline */}
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 text-xs">
+                <div 
+                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  className="flex items-center gap-2.5 cursor-pointer group select-none"
+                >
+                  <img 
+                    src={reachGrcLogo} 
+                    alt="ReachGRC" 
+                    className="h-5 w-auto object-contain transition-transform group-hover:scale-105" 
+                  />
+                  <div className="flex items-center gap-1.5 font-bold text-zinc-900 dark:text-white tracking-tight">
+                    <span>ReachGRC</span>
+                    <span className="text-brand-orange font-semibold text-[10px] px-1.5 py-0.5 rounded-md bg-brand-orange/10 border border-brand-orange/20">Trust</span>
+                  </div>
+                </div>
+
+                <span className="text-zinc-300 dark:text-zinc-700 hidden sm:inline">•</span>
+
+                <span className="text-zinc-500 dark:text-zinc-400 font-normal">
+                  Continuous security & compliance posture
+                </span>
               </div>
-              <p className="text-[9px] text-zinc-400/80 dark:text-zinc-650 uppercase tracking-widest mt-1">
-                © {new Date().getFullYear()} REACH GRC. All rights reserved.
-              </p>
+
+              {/* Clean Navigation Links */}
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-zinc-600 dark:text-zinc-400">
+                <button 
+                  onClick={() => navigate('/status')}
+                  className="hover:text-brand-orange transition-colors cursor-pointer"
+                >
+                  Status
+                </button>
+                <button 
+                  onClick={() => navigate('/docs/getting-started/overview')}
+                  className="hover:text-brand-orange transition-colors cursor-pointer"
+                >
+                  Documentation
+                </button>
+                <button 
+                  onClick={() => {
+                    const el = document.getElementById('controls-section');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:text-brand-orange transition-colors cursor-pointer"
+                >
+                  Controls
+                </button>
+                <button 
+                  onClick={() => {
+                    const el = document.getElementById('faq-section');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="hover:text-brand-orange transition-colors cursor-pointer"
+                >
+                  Security FAQ
+                </button>
+                <a 
+                  href="mailto:security@reachgrc.io?subject=Security%20Questionnaire%20Inquiry"
+                  className="hover:text-brand-orange transition-colors"
+                >
+                  Contact Security
+                </a>
+              </div>
+
+              {/* Status Pill & Copyright */}
+              <div className="flex items-center gap-3 text-xs text-zinc-400 dark:text-zinc-500">
+                <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Operational</span>
+                </div>
+                <span>© {new Date().getFullYear()} ReachGRC</span>
+              </div>
+
             </div>
           </footer>
 

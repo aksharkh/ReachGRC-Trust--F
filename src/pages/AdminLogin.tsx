@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Lock, ArrowLeft } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import { useTheme } from '../ThemeContext';
 import { Toaster, toast } from 'sonner';
+import reachGrcLogo from '../assets/REACH_GRC.png';
 
 export const AdminLogin = () => {
   const navigate = useNavigate();
@@ -82,9 +83,15 @@ export const AdminLogin = () => {
               : 'card-pattern-light border-zinc-200 bg-white text-zinc-900 shadow-xl'
           }`}>
             
-            {/* Lock / Security Shield Icon */}
-            <div className="mx-auto p-4 bg-brand-orange/10 border border-brand-orange/20 text-brand-orange rounded-2xl w-fit">
-              <Lock size={28} className="animate-pulse" />
+            {/* ReachGRC Brand Logo Badge */}
+            <div className="mx-auto flex flex-col items-center">
+              <div className="p-3 bg-brand-orange/10 border border-brand-orange/20 rounded-2xl shadow-[0_0_20px_rgba(255,138,28,0.15)] flex items-center justify-center">
+                <img 
+                  src={reachGrcLogo} 
+                  alt="ReachGRC Logo" 
+                  className="w-12 h-12 object-contain drop-shadow-[0_0_12px_rgba(255,138,28,0.3)]"
+                />
+              </div>
             </div>
 
             {/* Title */}

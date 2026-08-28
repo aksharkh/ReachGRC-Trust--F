@@ -71,3 +71,85 @@ export const fetchCompanyData = async (id: string): Promise<Company | null> => {
     return null;
   }
 };
+
+const QUESTIONNAIRE_API_URL = 'http://localhost:8081/api/trust/questionnaires';
+
+export const submitSecurityQuestionnaire = async (payload: Partial<import('../types').SecurityQuestionnaire>): Promise<import('../types').SecurityQuestionnaire> => {
+  const response = await fetch(QUESTIONNAIRE_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to submit questionnaire: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export const fetchCompanyQuestionnaires = async (companyId: number): Promise<import('../types').SecurityQuestionnaire[]> => {
+  try {
+    const response = await fetch(`${QUESTIONNAIRE_API_URL}/company/${companyId}`);
+    if (!response.ok) return [];
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching company questionnaires:', error);
+    return [];
+  }
+};
+
+export const fetchAllQuestionnaires = async (): Promise<import('../types').SecurityQuestionnaire[]> => {
+  try {
+    const response = await fetch(QUESTIONNAIRE_API_URL);
+    if (!response.ok) return [];
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching questionnaires:', error);
+    return [];
+  }
+};
+
+export const updateQuestionnaireStatus = async (id: number, status: string): Promise<import('../types').SecurityQuestionnaire> => {
+  const response = await fetch(`${QUESTIONNAIRE_API_URL}/${id}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ status }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to update status: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
+export const fetchAllActiveCompanies = async (): Promise<Company[]> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/allActive`);
+    if (response.ok) {
+      const data: ApiCompany[] = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data.map(adaptCompanyData);
+      }
+    }
+    // Fallback to allCompanies if allActive is empty or fails
+    const fallbackRes = await fetch(`${API_BASE_URL}/allCompanies`);
+    if (fallbackRes.ok) {
+      const data: ApiCompany[] = await fallbackRes.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data.map(adaptCompanyData);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching all active companies:', error);
+    return [];
+  }
+};
+
+

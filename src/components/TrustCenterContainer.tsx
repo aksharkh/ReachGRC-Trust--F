@@ -8,6 +8,7 @@ import { FAQSection } from './FAQSection';
 import type { Company } from '../types';
 import { useTheme } from '../ThemeContext';
 import { Sun, Moon } from 'lucide-react';
+import reachGrcLogo from '../assets/REACH_GRC.png';
 
 interface TrustCenterContainerProps {
   company: Company;
@@ -167,7 +168,12 @@ export const TrustCenterContainer: React.FC<TrustCenterContainerProps> = ({ comp
         </div>
 
         {/* Footer */}
-        <div className="text-center pt-6 border-t border-zinc-200 dark:border-zinc-800">
+        <div className="text-center pt-8 border-t border-zinc-200 dark:border-zinc-800 flex flex-col items-center gap-2.5">
+          <img 
+            src={reachGrcLogo} 
+            alt="ReachGRC Logo" 
+            className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(255,138,28,0.25)]" 
+          />
           <a 
             href={import.meta.env.VITE_APP_URL || '#'} 
             target="_blank" 

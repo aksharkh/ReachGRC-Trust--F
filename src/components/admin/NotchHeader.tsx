@@ -5,8 +5,8 @@ import reachGrcLogo from '../../assets/REACH_GRC.png';
 
 interface NotchHeaderProps {
   company: Company | null;
-  adminTab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing';
-  setAdminTab: (tab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing') => void;
+  adminTab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing' | 'inquiries';
+  setAdminTab: (tab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing' | 'inquiries') => void;
   globalSearch: string;
   setGlobalSearch: (search: string) => void;
   showNotifications: boolean;
@@ -38,9 +38,10 @@ export const NotchHeader: React.FC<NotchHeaderProps> = ({
 }) => {
   const [hovered, setHovered] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  // Keep expanded if hovered, notifications popup is open, or search bar is focused
-  const isExpanded = hovered || showNotifications || searchFocused;
+  // Keep expanded if hovered, notifications popup is open, profile menu is open, or search bar is focused
+  const isExpanded = hovered || showNotifications || searchFocused || showProfileMenu;
 
   // Shared synchronized animation styles for a unified, glitch-free expansion
   const syncTransitionStyle = {
@@ -187,6 +188,7 @@ export const NotchHeader: React.FC<NotchHeaderProps> = ({
             onClick={(e) => {
               e.stopPropagation();
               setShowNotifications(!showNotifications);
+              setShowProfileMenu(false);
             }}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer relative ${showNotifications ? 'text-brand-orange bg-[#131622]' : 'text-zinc-400 hover:text-white'}`}
           >
@@ -232,7 +234,15 @@ export const NotchHeader: React.FC<NotchHeaderProps> = ({
             </div>
           )}
           
-          <div className="flex items-center gap-2.5 select-none hover:opacity-90 transition-opacity cursor-pointer" title="Logged in as GRC Root Operator">
+          <div 
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowProfileMenu(!showProfileMenu);
+              setShowNotifications(false);
+            }}
+            className="flex items-center gap-2.5 select-none hover:opacity-90 transition-opacity cursor-pointer relative" 
+            title="Administrator Quick Menu"
+          >
             <div className="w-7 h-7 rounded-full bg-brand-orange/15 border border-brand-orange/30 text-brand-orange flex items-center justify-center font-black text-[10px] tracking-wider uppercase shadow-[0_0_10px_rgba(255,138,28,0.1)]">
               AD
             </div>
@@ -240,6 +250,54 @@ export const NotchHeader: React.FC<NotchHeaderProps> = ({
               <span className="text-[10px] font-black uppercase tracking-wider text-zinc-200">System Admin</span>
               <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest -mt-0.5">Root Operator</span>
             </div>
+
+            {/* Quick Profile Dropdown */}
+            {showProfileMenu && (
+              <div className="absolute top-12 right-0 bg-[#0d0f17] border border-[#1f2438] rounded-xl shadow-2xl p-3 w-56 z-50 text-xs space-y-1.5 animate-in fade-in zoom-in-95 duration-200 text-left">
+                <div className="pb-2 border-b border-[#1f2438]">
+                  <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Active Workspace</p>
+                  <p className="font-bold text-white text-xs truncate mt-0.5">{company?.companyName || 'ReachGRC'}</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setAdminTab('profile');
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#131622] text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer"
+                >
+                  Organization Settings
+                </button>
+                {company && (
+                  <button
+                    onClick={() => {
+                      window.open(`/company/${company.id}`, '_blank');
+                      setShowProfileMenu(false);
+                    }}
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#131622] text-brand-orange text-xs transition-colors cursor-pointer"
+                  >
+                    View Public Trust Center ↗
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    window.open('/docs/getting-started/overview', '_blank');
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#131622] text-zinc-300 hover:text-white text-xs transition-colors cursor-pointer"
+                >
+                  Documentation ↗
+                </button>
+                <button
+                  onClick={() => {
+                    window.open('/status', '_blank');
+                    setShowProfileMenu(false);
+                  }}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-[#131622] text-green-400 text-xs transition-colors cursor-pointer"
+                >
+                  System Status ↗
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

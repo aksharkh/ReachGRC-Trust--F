@@ -3,6 +3,7 @@ import { useTheme } from "@/ThemeContext";
 import { FiSearch } from "react-icons/fi";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import reachGrcLogo from "../../assets/REACH_GRC.png";
 
 // Documentation routes metadata for instant client-side searching
 const docsPages = [
@@ -35,14 +36,15 @@ const DocsNavbar = () => {
       <div className="flex justify-between items-center h-full w-full">
 
         {/* Logo and Brand Title */}
-        <div className="flex gap-2 md:gap-3 items-center h-full">
+        <div className="flex gap-2.5 items-center h-full">
           <Link
             to="/docs"
-            className="text-[#ff611a] font-bold text-lg md:text-xl no-underline"
+            className="flex items-center gap-2 text-[#ff611a] font-bold text-lg md:text-xl no-underline"
           >
-            ReachGRC
+            <img src={reachGrcLogo} alt="ReachGRC Logo" className="w-6 h-6 object-contain" />
+            <span>ReachGRC</span>
           </Link>
-          <span className="hidden sm:block text-xs md:text-sm font-bold text-zinc-700 dark:text-zinc-300 tracking-widest">
+          <span className="hidden sm:block text-xs md:text-sm font-bold text-zinc-700 dark:text-zinc-300 tracking-widest border-l border-zinc-300 dark:border-zinc-700 pl-2.5">
             DOCUMENTATION
           </span>
         </div>
@@ -100,6 +102,22 @@ const DocsNavbar = () => {
                 )}
               </div>
             )}
+          </div>
+
+          {/* Cross-navigation to Trust Center & Admin */}
+          <div className="hidden lg:flex items-center gap-2 text-xs font-semibold">
+            <Link
+              to="/company/1"
+              className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 no-underline transition-colors flex items-center gap-1.5"
+            >
+              Trust Center
+            </Link>
+            <Link
+              to="/admin/login"
+              className="px-3 py-1.5 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 text-[#ff611a] border border-orange-500/20 no-underline transition-colors flex items-center gap-1.5"
+            >
+              Admin Console
+            </Link>
           </div>
 
           {/* Theme toggler */}

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { CreditCard, Check, ShieldAlert, X } from 'lucide-react';
+import { CreditCard, Check, ShieldAlert, X, Download } from 'lucide-react';
+import { toast } from 'sonner';
 import type { Company } from '../../types';
+import { generateAndDownloadInvoice } from '../../lib/invoiceGenerator';
 
 interface TabBillingSubscriptionsProps {
   company: Company;
@@ -136,15 +138,127 @@ export const TabBillingSubscriptions: React.FC<TabBillingSubscriptionsProps> = (
         </div>
       )}
 
+      {/* Transaction History & Invoice Ledger */}
+      <div className="space-y-4 pt-4 border-t border-zinc-200 dark:border-[#1f2438]/80">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-brand-orange" />
+            Billing History & Tax Invoices
+          </h3>
+          <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+            Automated GST Receipts
+          </span>
+        </div>
+
+        <div className="rounded-2xl border border-zinc-200 dark:border-[#1f2438] bg-zinc-50/40 dark:bg-[#090b11]/60 overflow-hidden text-xs">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-zinc-200 dark:border-[#1f2438] text-[10px] uppercase font-bold text-zinc-400 dark:text-zinc-500 bg-zinc-100/50 dark:bg-zinc-950/40">
+                  <th className="py-3 px-4">Invoice #</th>
+                  <th className="py-3 px-4">Plan</th>
+                  <th className="py-3 px-4">Amount</th>
+                  <th className="py-3 px-4">Date</th>
+                  <th className="py-3 px-4">Status</th>
+                  <th className="py-3 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-200 dark:divide-[#1f2438]/60 text-zinc-700 dark:text-zinc-300">
+                <tr className="hover:bg-zinc-100/30 dark:hover:bg-[#131622]/40 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold">INV-2026-081</td>
+                  <td className="py-3 px-4 font-medium">Enterprise Security Plan</td>
+                  <td className="py-3 px-4 font-bold text-zinc-900 dark:text-white">₹19,999</td>
+                  <td className="py-3 px-4 text-zinc-500">Aug 01, 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      PAID
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-right">
+                    <button 
+                      onClick={async () => {
+                        try {
+                          toast.info("Generating Tax Invoice INV-2026-081...");
+                          await generateAndDownloadInvoice({
+                            invoiceNumber: 'INV-2026-081',
+                            planName: 'Enterprise Security Plan',
+                            amount: '₹19,999',
+                            rawAmount: 19999,
+                            date: 'Aug 01, 2026',
+                            status: 'PAID',
+                            companyName: company?.companyName || 'Enterprise Workspace',
+                            billingEmail: 'billing@' + (company?.companyName?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'workspace') + '.com',
+                            gstin: '29AABCR8941F1Z8'
+                          });
+                          toast.success("Tax Invoice INV-2026-081 downloaded successfully!");
+                        } catch (err) {
+                          console.error(err);
+                          toast.error("Failed to generate PDF invoice.");
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-orange hover:underline cursor-pointer bg-brand-orange/5 hover:bg-brand-orange/10 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Download size={11} />
+                      <span>Download PDF</span>
+                    </button>
+                  </td>
+                </tr>
+                <tr className="hover:bg-zinc-100/30 dark:hover:bg-[#131622]/40 transition-colors">
+                  <td className="py-3 px-4 font-mono font-bold">INV-2026-042</td>
+                  <td className="py-3 px-4 font-medium">Growth Tier Annual</td>
+                  <td className="py-3 px-4 font-bold text-zinc-900 dark:text-white">₹4,999</td>
+                  <td className="py-3 px-4 text-zinc-500">Jan 15, 2026</td>
+                  <td className="py-3 px-4">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      PAID
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-right">
+                    <button 
+                      onClick={async () => {
+                        try {
+                          toast.info("Generating Tax Invoice INV-2026-042...");
+                          await generateAndDownloadInvoice({
+                            invoiceNumber: 'INV-2026-042',
+                            planName: 'Growth Tier Annual',
+                            amount: '₹4,999',
+                            rawAmount: 4999,
+                            date: 'Jan 15, 2026',
+                            status: 'PAID',
+                            companyName: company?.companyName || 'Enterprise Workspace',
+                            billingEmail: 'billing@' + (company?.companyName?.toLowerCase().replace(/[^a-z0-9]/g, '') || 'workspace') + '.com',
+                            gstin: '29AABCR8941F1Z8'
+                          });
+                          toast.success("Tax Invoice INV-2026-042 downloaded successfully!");
+                        } catch (err) {
+                          console.error(err);
+                          toast.error("Failed to generate PDF invoice.");
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-orange hover:underline cursor-pointer bg-brand-orange/5 hover:bg-brand-orange/10 px-2 py-1 rounded-md transition-colors"
+                    >
+                      <Download size={11} />
+                      <span>Download PDF</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       {/* Cancel Subscription Modal Overlay */}
       {showCancelModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#131622] border border-zinc-200 dark:border-[#1f2438] rounded-3xl p-6 max-w-md w-full space-y-4 animate-in fade-in zoom-in duration-200">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0d0f17] border border-zinc-200 dark:border-[#1f2438] rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-[#1f2438] pb-3">
-              <h3 className="text-sm font-bold text-red-500 flex items-center gap-2">
-                <ShieldAlert size={16} className="text-red-500" />
-                Cancel GRC Subscription
-              </h3>
+              <div className="flex items-center gap-2 text-red-500">
+                <ShieldAlert size={18} />
+                <h3 className="font-bold text-sm text-zinc-900 dark:text-white">Confirm Plan Downgrade</h3>
+              </div>
               <button 
                 onClick={() => {
                   setShowCancelModal(false);

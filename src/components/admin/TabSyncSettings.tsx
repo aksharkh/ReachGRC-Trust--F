@@ -95,6 +95,29 @@ export const TabSyncSettings: React.FC<TabSyncSettingsProps> = ({
         </div>
       </div>
 
+      {/* Quick Demo Template Loader */}
+      <div className="flex items-center justify-between p-4 bg-brand-orange/5 border border-brand-orange/20 rounded-2xl flex-wrap gap-3">
+        <div>
+          <p className="text-xs font-bold text-zinc-900 dark:text-white">Need a live test database?</p>
+          <p className="text-[11px] text-zinc-500 dark:text-zinc-400 font-light">Load our pre-configured GRC compliance Google Sheet template with 1 click.</p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setSheetConfig({
+              ...sheetConfig,
+              spreadsheetId: '1mX3LM0cBCHi27-V6hvu3O_qqoLp289coeSX0JcNma6s',
+              sheetTabName: 'Sheet1',
+              sheetUrl: 'https://docs.google.com/spreadsheets/d/1mX3LM0cBCHi27-V6hvu3O_qqoLp289coeSX0JcNma6s/edit?usp=sharing',
+              syncEnabled: true
+            });
+          }}
+          className="px-3.5 py-1.5 rounded-xl bg-brand-orange text-white text-xs font-bold shadow-sm hover:bg-brand-orange/90 transition-all cursor-pointer"
+        >
+          Load Demo Template
+        </button>
+      </div>
+
       {/* Inputs Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-1.5">
@@ -119,15 +142,29 @@ export const TabSyncSettings: React.FC<TabSyncSettingsProps> = ({
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">Google Sheets URL</label>
-        <input 
-          type="text" 
-          value={sheetConfig.sheetUrl}
-          onChange={e => setSheetConfig({ ...sheetConfig, sheetUrl: e.target.value })}
-          placeholder="https://docs.google.com/spreadsheets/d/..."
-          className="w-full bg-zinc-50 dark:bg-[#090b11] border border-zinc-200 dark:border-[#1f2438] rounded-xl px-4 py-2.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-brand-orange/40 focus:ring-1 focus:ring-brand-orange/30 hover:dark:border-zinc-700/80 transition-all"
-        />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">Google Sheets URL</label>
+          <input 
+            type="text" 
+            value={sheetConfig.sheetUrl}
+            onChange={e => setSheetConfig({ ...sheetConfig, sheetUrl: e.target.value })}
+            placeholder="https://docs.google.com/spreadsheets/d/..."
+            className="w-full bg-zinc-50 dark:bg-[#090b11] border border-zinc-200 dark:border-[#1f2438] rounded-xl px-4 py-2.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-brand-orange/40 focus:ring-1 focus:ring-brand-orange/30 hover:dark:border-zinc-700/80 transition-all"
+          />
+        </div>
+        <div className="space-y-1.5">
+          <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider">Telemetry Polling Frequency</label>
+          <select
+            className="w-full bg-zinc-50 dark:bg-[#090b11] border border-zinc-200 dark:border-[#1f2438] rounded-xl px-4 py-2.5 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-brand-orange/40 focus:ring-1 focus:ring-brand-orange/30 hover:dark:border-zinc-700/80 transition-all cursor-pointer"
+          >
+            <option value="1h">Every 1 Hour (Continuous Telemetry)</option>
+            <option value="15m">Every 15 Minutes (High Sensitivity)</option>
+            <option value="6h">Every 6 Hours</option>
+            <option value="24h">Daily Automated Audit</option>
+            <option value="manual">Manual Trigger Only</option>
+          </select>
+        </div>
       </div>
 
       {/* Switch Toggler */}

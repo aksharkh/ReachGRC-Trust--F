@@ -9,7 +9,10 @@ import {
   Key, 
   CreditCard, 
   Moon, 
-  Sun 
+  Sun,
+  ExternalLink,
+  X,
+  ClipboardList
 } from 'lucide-react';
 import type { Company } from '../../types';
 import reachGrcLogo from '../../assets/REACH_GRC.png';
@@ -21,17 +24,21 @@ interface AdminSidebarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   setShowCreateModal: (show: boolean) => void;
-  adminTab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing';
-  setAdminTab: (tab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing') => void;
+  adminTab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing' | 'inquiries';
+  setAdminTab: (tab: 'sync' | 'profile' | 'grc' | 'media' | 'apikey' | 'billing' | 'inquiries') => void;
   theme: 'light' | 'dark';
   toggleTheme: (event?: React.MouseEvent) => void;
   handleLogout: () => void;
+  onCloseMobile?: () => void;
 }
 
 /**
  * AdminSidebar Component
  * Handles the organizational selector search lists, Tab navigations list,
  * Dark/Light theme toggles, and Root Admin logout triggers.
+ * 
+ * Engineered to fit the screen height without outer page scrolling.
+ * Only the internal navigation sections scroll if content exceeds available height.
  */
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   id,
@@ -45,6 +52,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   theme,
   toggleTheme,
   handleLogout,
+  onCloseMobile,
 }) => {
   const navigate = useNavigate();
 
@@ -54,24 +62,40 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   );
 
   return (
-    <aside className="w-80 border-r border-zinc-200 dark:border-[#1f2438] bg-[#f8f9fa] dark:bg-[#0d0f17] p-6 pt-20 flex flex-col justify-between shrink-0 h-full overflow-y-auto select-none">
-      <div className="space-y-6">
-        
-        {/* Logo / Header */}
+    <aside className="w-80 border-r border-zinc-200 dark:border-[#1f2438] bg-[#f8f9fa] dark:bg-[#0d0f17] flex flex-col justify-between shrink-0 h-full overflow-hidden select-none">
+      
+      {/* 1. Fixed Top Header (Logo + Title, NO blank gap above) */}
+      <div className="shrink-0 p-5 pb-4 border-b border-zinc-200/70 dark:border-[#1f2438]/70 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-1 bg-brand-orange/5 border border-brand-orange/15 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,138,28,0.05)]">
+          <div className="p-1.5 bg-brand-orange/5 border border-brand-orange/15 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(255,138,28,0.05)]">
             <img src={reachGrcLogo} alt="ReachGRC Logo" className="h-6 w-auto object-contain" />
           </div>
           <div>
             <h1 className="text-sm font-black text-zinc-900 dark:text-white tracking-wider uppercase">ReachGRC</h1>
-            <p className="text-[10px] text-zinc-550 dark:text-zinc-500 font-bold uppercase tracking-widest">GRC Portal Admin</p>
+            <p className="text-[10px] text-zinc-500 dark:text-zinc-400 font-bold uppercase tracking-widest">GRC Portal Admin</p>
           </div>
         </div>
 
+        {onCloseMobile && (
+          <button
+            onClick={onCloseMobile}
+            className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            title="Close Sidebar"
+          >
+            <X size={16} />
+          </button>
+        )}
+      </div>
+
+      {/* 2. Middle Scrollable Content (Internal scroll ONLY if items overflow) */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-5 space-y-5 scrollbar-thin">
+        
         {/* Company Search and list */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">Organizations</label>
+            <label className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+              Organizations <span className="text-[9px] text-zinc-400 dark:text-zinc-600 font-normal">({allCompanies.length})</span>
+            </label>
             <button
               onClick={() => setShowCreateModal(true)}
               className="text-[10px] font-bold text-brand-orange hover:text-brand-orange/85 transition-colors flex items-center gap-1 cursor-pointer"
@@ -92,13 +116,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </div>
 
           {/* Company List Box */}
-          <div className="max-h-50 overflow-y-auto space-y-1 border border-zinc-200 dark:border-[#1f2438] rounded-xl p-1 bg-zinc-100/30 dark:bg-[#090b11]/60">
+          <div className="max-h-44 overflow-y-auto space-y-1 border border-zinc-200 dark:border-[#1f2438] rounded-xl p-1 bg-zinc-100/30 dark:bg-[#090b11]/60">
             {filteredCompanies.map((c) => (
               <button
                 key={c.id}
                 onClick={() => {
                   navigate(`/admin/company/${c.id}`);
                   setAdminTab('profile');
+                  if (onCloseMobile) onCloseMobile();
                 }}
                 className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center justify-between cursor-pointer ${
                   Number(id) === c.id 
@@ -113,13 +138,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           </div>
         </div>
 
-        {/* Sidebar Sections */}
+        {/* Sidebar Sections Navigation */}
         <div className="space-y-1">
           <label className="text-[10px] font-bold text-zinc-450 dark:text-zinc-500 uppercase tracking-wider block mb-2">Sections</label>
           
           {/* Standalone Sync Settings */}
           <button
-            onClick={() => setAdminTab('sync')}
+            onClick={() => {
+              setAdminTab('sync');
+              if (onCloseMobile) onCloseMobile();
+            }}
             className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer ${
               adminTab === 'sync' 
                 ? 'bg-brand-orange/10 border-l-4 border-l-brand-orange text-brand-orange dark:text-brand-orange font-bold' 
@@ -135,9 +163,19 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           {company && (
             <>
               <div className="border-t border-zinc-200 dark:border-[#1f2438] my-2" />
-              <p className="text-[9px] font-bold text-zinc-450 dark:text-zinc-550 uppercase tracking-wider px-3.5 mb-1.5 truncate">
-                Settings: {company.companyName}
-              </p>
+              <div className="flex items-center justify-between px-3.5 mb-1.5">
+                <p className="text-[9px] font-bold text-zinc-450 dark:text-zinc-550 uppercase tracking-wider truncate max-w-[140px]">
+                  {company.companyName}
+                </p>
+                <button
+                  onClick={() => window.open(`/company/${company.id}`, '_blank')}
+                  className="text-[9px] font-bold text-brand-orange hover:underline flex items-center gap-1 cursor-pointer"
+                  title="View Public Trust Center"
+                >
+                  <span>Preview</span>
+                  <ExternalLink size={9} />
+                </button>
+              </div>
 
               {[
                 { id: 'profile', label: 'Company Profile', icon: <Settings size={14} /> },
@@ -145,10 +183,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
                 { id: 'media', label: 'Media & Documents', icon: <Plus size={14} /> },
                 { id: 'apikey', label: 'API Credentials', icon: <Key size={14} /> },
                 { id: 'billing', label: 'Billing & Subscriptions', icon: <CreditCard size={14} /> },
+                { id: 'inquiries', label: 'Security Inquiries', icon: <ClipboardList size={14} /> },
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setAdminTab(tab.id as any)}
+                  onClick={() => {
+                    setAdminTab(tab.id as any);
+                    if (onCloseMobile) onCloseMobile();
+                  }}
                   className={`w-full text-left px-3.5 py-2.5 rounded-xl transition-all cursor-pointer ${
                     adminTab === tab.id 
                       ? 'bg-brand-orange/10 border-l-4 border-l-brand-orange text-brand-orange dark:text-brand-orange font-bold' 
@@ -166,8 +208,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         </div>
       </div>
 
-      {/* Floating Theme Toggler and Logout triggers */}
-      <div className="flex flex-col gap-3 border-t border-zinc-200 dark:border-[#1f2438] pt-4">
+      {/* 3. Fixed Bottom Footer (Theme Switcher, Logout button, no scrolling) */}
+      <div className="shrink-0 p-5 pt-3 border-t border-zinc-200 dark:border-[#1f2438] flex flex-col gap-2.5 bg-[#f8f9fa] dark:bg-[#0d0f17]">
         <button
           onClick={(e) => toggleTheme(e)}
           className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold bg-zinc-100 dark:bg-[#090b11] hover:bg-zinc-200 dark:hover:bg-[#1c1f2d] text-zinc-700 dark:text-zinc-300 transition-colors cursor-pointer"
@@ -186,10 +228,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           Logout Session
         </button>
 
-        <div className="text-[10px] text-zinc-400 dark:text-zinc-550 font-semibold text-center mt-1">
-          ReachGRC
+        <div className="text-[9px] text-zinc-400 dark:text-zinc-550 font-semibold text-center mt-0.5">
+          ReachGRC Trust Admin • v2.4
         </div>
       </div>
+
     </aside>
   );
 };

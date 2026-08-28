@@ -1,10 +1,12 @@
 import { Analytics } from "@vercel/analytics/react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { CompanyProfile } from "./pages/CompanyProfile";
+import { HomePage } from "./pages/HomePage";
 import { ThemeProvider } from "./ThemeContext";
 import { StatusPage as SystemStatusPage } from "./pages/StatusPage";
 import { AdminLogin } from "./pages/AdminLogin";
 import { AdminGuard } from "./components/AdminGuard";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 // Layout & Menu Configurations
 import DocsLayout from "./layouts/DocsLayout";
@@ -56,7 +58,7 @@ function App() {
           <Route path="/admin/company/:id" element={<AdminGuard><CompanyProfile /></AdminGuard>} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/status" element={<SystemStatusPage />} />
-          <Route path="/" element={<Navigate to="/company/1" replace />} />
+          <Route path="/" element={<HomePage />} />
 
           {/* Documentation Root Wrapper Layout */}
           <Route path="/docs" element={<DocsLayout />}>
@@ -114,6 +116,9 @@ function App() {
               element={<Navigate to="getting-started/overview" replace />}
             />
           </Route>
+
+          {/* Global 404 Not Found Catch-All Route */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
 

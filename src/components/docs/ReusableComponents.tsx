@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { FiCopy, FiCheck, FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { RiCustomerService2Line } from "react-icons/ri";
+import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { Badge as ShadcnBadge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -337,9 +338,9 @@ export const SectionHeader = ({
         {title}
       </h2>
       {seeAll && (
-        <a href="#" className="text-xs font-semibold text-[#ff611a] hover:underline">
+        <span className="text-xs font-semibold text-[#ff611a] hover:underline cursor-pointer">
           See all
-        </a>
+        </span>
       )}
     </div>
     <p className="text-xs md:text-sm text-zinc-500 dark:text-zinc-400 mt-1.5 leading-relaxed">
@@ -354,30 +355,42 @@ export const DocCard = ({
   badge,
   title,
   description,
-  href = "#",
+  href,
 }: {
   badge?: string;
   title: string;
   description: string;
   href?: string;
-}) => (
-  <a
-    href={href}
-    className="block bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-5 hover:border-[#ff831c] dark:hover:border-[#ff831c] hover:shadow-md transition-all duration-200 no-underline group"
-  >
-    {badge && (
-      <p className="text-[10px] font-bold tracking-widest uppercase text-[#ff611a] mb-2 select-none">
-        {badge}
-      </p>
-    )}
-    <h3 className="text-sm font-semibold text-zinc-900 dark:text-white mb-1.5 group-hover:text-[#ff611a] dark:group-hover:text-[#ff831c] transition-colors">
-      {title}
-    </h3>
-    <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-      {description}
-    </p>
-  </a>
-);
+}) => {
+  const content = (
+    <div className="group relative z-10 hover:z-30 block h-full p-5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 hover:bg-gradient-to-br hover:from-brand-red hover:to-brand-orange hover:border-transparent hover:shadow-[0_20px_50px_rgba(255,57,24,0.35)] hover:scale-110 hover:rounded-none transition-all duration-300 ease-out cursor-pointer flex flex-col justify-between origin-center">
+      <div>
+        {badge && (
+          <p className="text-[10px] font-bold tracking-widest uppercase text-brand-orange group-hover:text-black mb-2 select-none">
+            {badge}
+          </p>
+        )}
+        <h3 className="text-sm font-bold text-zinc-900 dark:text-white group-hover:text-white group-hover:underline flex items-center gap-1 transition-colors leading-snug">
+          <span>{title}</span>
+          <TbArrowBadgeRightFilled className="opacity-0 group-hover:opacity-100 text-lg text-white group-hover:translate-x-0.5 transition-all shrink-0" />
+        </h3>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400 group-hover:text-black dark:group-hover:text-black font-semibold mt-2 leading-relaxed transition-colors">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+
+  if (href && href !== '#') {
+    return (
+      <a href={href} className="no-underline block h-full">
+        {content}
+      </a>
+    );
+  }
+
+  return content;
+};
 
 // ─── Standalone Page Feedback Widget ───────────────────────────────────────────
 

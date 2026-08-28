@@ -120,14 +120,14 @@ export const TabCompanyProfile: React.FC<TabCompanyProfileProps> = ({
         </div>
 
         {/* Coordinates Preview visualizer globe card */}
-        <div className="border border-zinc-200 dark:border-[#1f2438] rounded-2xl overflow-hidden h-[300px] relative z-10 bg-zinc-50 dark:bg-[#090b11]">
-          <LocationGlobe 
-            theme={theme}
-            latitude={profileLatitude !== null ? profileLatitude : undefined}
-            longitude={profileLongitude !== null ? profileLongitude : undefined}
-            locationName={profileLocationName || undefined}
-          />
-        </div>
+        <LocationGlobe 
+          theme={theme}
+          latitude={profileLatitude !== null ? profileLatitude : undefined}
+          longitude={profileLongitude !== null ? profileLongitude : undefined}
+          locationName={profileLocationName || undefined}
+          mapHeight="h-[300px]"
+          zoom={1.2}
+        />
       </div>
     </div>
   );

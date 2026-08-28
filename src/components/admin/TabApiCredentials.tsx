@@ -158,6 +158,113 @@ export const TabApiCredentials: React.FC<TabApiCredentialsProps> = ({
           </button>
         </div>
       )}
+
+      {/* Interactive Developer Sandbox / Code Snippets */}
+      <div className="space-y-3 pt-2">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-brand-orange animate-pulse" />
+            Developer Integration Code Examples
+          </h3>
+          <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">
+            Public REST Endpoints
+          </span>
+        </div>
+
+        <DeveloperCodeSnippets apiKey={company.apiKey || 'rgc_demo_key'} companyId={company.id} />
+      </div>
+    </div>
+  );
+};
+
+interface SnippetProps {
+  apiKey: string;
+  companyId: number | string;
+}
+
+const DeveloperCodeSnippets: React.FC<SnippetProps> = ({ apiKey, companyId }) => {
+  const [activeLang, setActiveLang] = useState<'curl' | 'js' | 'python' | 'widget'>('curl');
+  const [copiedSnippet, setCopiedSnippet] = useState(false);
+
+  const snippets: Record<string, string> = {
+    curl: `curl -X GET "http://localhost:8081/api/trust/${companyId}" \\
+  -H "X-API-KEY: ${apiKey}" \\
+  -H "Accept: application/json"`,
+
+    js: `// Fetch Live GRC Posture Data in JavaScript / TypeScript
+const response = await fetch("http://localhost:8081/api/trust/${companyId}", {
+  headers: {
+    "X-API-KEY": "${apiKey}",
+    "Accept": "application/json"
+  }
+});
+const posture = await response.json();
+console.log("GRC Trust Score:", posture.stats.score, "Grade:", posture.stats.grade);`,
+
+    python: `# Fetch Live GRC Posture Data in Python
+import requests
+
+url = "http://localhost:8081/api/trust/${companyId}"
+headers = {
+    "X-API-KEY": "${apiKey}",
+    "Accept": "application/json"
+}
+
+response = requests.get(url, headers=headers)
+data = response.json()
+print(f"Verified Security Posture: {data['companyName']} -> Grade {data['stats']['grade']}")`,
+
+    widget: `<!-- Embeddable ReachGRC Trust Badge Widget -->
+<script 
+  src="http://localhost:5173/widget/widget.umd.js"
+  data-company-id="${companyId}"
+  data-api-key="${apiKey}"
+  data-theme="dark"
+  async>
+</script>
+<div id="reachgrc-trust-badge"></div>`
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(snippets[activeLang]).catch(() => {});
+    setCopiedSnippet(true);
+    setTimeout(() => setCopiedSnippet(false), 2000);
+    toast.success(`${activeLang.toUpperCase()} code example copied!`);
+  };
+
+  return (
+    <div className="rounded-2xl border border-zinc-200 dark:border-[#1f2438] bg-zinc-900/90 overflow-hidden text-white font-mono text-xs">
+      {/* Code Header Bar */}
+      <div className="flex items-center justify-between px-4 py-2 bg-zinc-950/80 border-b border-zinc-800">
+        <div className="flex items-center gap-2">
+          {(['curl', 'js', 'python', 'widget'] as const).map((lang) => (
+            <button
+              key={lang}
+              onClick={() => setActiveLang(lang)}
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${
+                activeLang === lang
+                  ? 'bg-brand-orange text-white shadow-sm'
+                  : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+              }`}
+            >
+              {lang === 'js' ? 'JavaScript' : lang === 'python' ? 'Python' : lang === 'widget' ? 'HTML Widget' : 'cURL'}
+            </button>
+          ))}
+        </div>
+        
+        <button
+          onClick={handleCopy}
+          className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[10px] font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+        >
+          {copiedSnippet ? <Check size={11} className="text-green-400" /> : <Copy size={11} />}
+          {copiedSnippet ? 'Copied' : 'Copy Code'}
+        </button>
+      </div>
+
+      {/* Code Body */}
+      <div className="p-4 overflow-x-auto text-[11px] text-zinc-200 leading-relaxed font-mono">
+        <pre>{snippets[activeLang]}</pre>
+      </div>
     </div>
   );
 };

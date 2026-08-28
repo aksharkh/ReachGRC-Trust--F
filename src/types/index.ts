@@ -25,11 +25,23 @@ export interface Domain {
   updatedAt: string;
 }
 
+export interface JourneyMilestone {
+  id?: number | string;
+  title: string;
+  date: string;
+  status: 'completed' | 'active' | 'scheduled' | string;
+  description: string;
+  orderIndex?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface ApiCompany {
   id: number;
   companyName: string;
   statement: string;
   domains: Domain[];
+  milestones?: JourneyMilestone[];
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -62,6 +74,7 @@ export interface Company extends ApiCompany {
   certifications?: string[]; 
   documents?: Document[];
   faqs?: FAQ[];
+  milestones?: JourneyMilestone[];
   
   // API credentials and pricing plans
   apiKey?: string;
@@ -77,4 +90,20 @@ export interface TrustBadgeProps {
   companyId: string;
   theme?: 'light' | 'dark';
 }
-// Optional now as API doesn't seem to return them yet
+
+export interface SecurityQuestionnaire {
+  id?: number;
+  ticketId?: string;
+  companyId?: number | null;
+  companyName?: string;
+  fullName: string;
+  email: string;
+  requesterCompany: string;
+  frameworkType: string;
+  targetDate?: string;
+  notes?: string;
+  attachedFileName?: string;
+  status?: 'PENDING' | 'IN_REVIEW' | 'COMPLETED' | 'ARCHIVED';
+  createdAt?: string;
+  updatedAt?: string;
+}
